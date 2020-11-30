@@ -17,6 +17,7 @@ generation                                  = 0;
 Diff                                        = [1:popsize];
 Vec_Prop                                    = [1:popsize];
 Vec_Sel                                     = [];
+storage_power                               = [];
 
 %% Initial pop generation %%
 
@@ -30,10 +31,11 @@ while 1
 
     for i=1:popsize/2
         [Lambda, Power, Lamb_plot]         = cascateado(Pin, pop(i,:));
-        Test_Power15                       = [Lamb_plot(420) Lamb_plot(430) Lamb_plot(440) Lamb_plot(450) Lamb_plot(460) Lamb_plot(470) Lamb_plot(480) Lamb_plot(490) Lamb_plot(500) Lamb_plot(510)];
-        Test_Power                         = [Power(420) Power(430) Power(440) Power(450) Power(460) Power(470) Power(480) Power(490) Power(500) Power(510)];
+        Test_Power15                       = [Lamb_plot(420) Lamb_plot(430) Lamb_plot(440) Lamb_plot(450) Lamb_plot(460) Lamb_plot(470) Lamb_plot(480) Lamb_plot(490) Lamb_plot(500) Lamb_plot(510) Lamb_plot(520)];
+        Test_Power                         = [Power(420) Power(430) Power(440) Power(450) Power(460) Power(470) Power(480) Power(490) Power(500) Power(510) Power(520)];
         Power_diff                         = abs((Test_Power) - (Test_Power15));
         Diff(i)                            = sum(Power_diff);
+        storage_power                      = [storage_power; Power];
     end
 
 %% Crossover %%
@@ -43,7 +45,7 @@ while 1
         Vec_Sel                            = [Vec_Sel ones(1,round(Vec_Prop(i)*1000))*i];
     end
     for i=1:popsize/2
-        Cross                              = [Vec_Sel(round(rand()*(length(Vec_Sel)/2-1)+1)) round(rand()*(popsize/2-1)+popsize/2+1)];
+        Cross                              = [Vec_Sel(round(rand()*(length(Vec_Sel)))) round(rand()*(popsize/2-1)+popsize/2+1)];
         chance = rand();
         if chance<=0.25
             new_pop(i,:)                   = [pop(Cross(1),1) pop(Cross(1),2) pop(Cross(2),3) pop(Cross(2),4)];
@@ -83,6 +85,7 @@ while 1
         break
     end
     
+    format shortg
     clock
     Vec_Sel                                = [];
     pop                                    = new_pop;
