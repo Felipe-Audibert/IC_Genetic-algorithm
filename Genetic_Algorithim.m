@@ -22,7 +22,7 @@ storage_power                               = [];
 %% Initial pop generation %%
 
 for i=1:popsize
-    pop(i,:)                                = [10*rand()+5 3.75*rand()+0.25 (1e-5)*rand()+1e-4 3*rand()+4];
+    pop(i,:)                                = [7*rand()+7 3.75*rand()+0.25 (1e-5)*rand()+1e-4 3*rand()+4];
 end
 
 %% Testing the population %%
@@ -79,7 +79,6 @@ while 1
     
     if sum(Diff)<0.5 || generation>20
         disp(min(Diff));
-        disp(pop(min(Diff)));
         plot(Lambda,Power,'r',Lambda,Lamb_plot);
         toc
         break

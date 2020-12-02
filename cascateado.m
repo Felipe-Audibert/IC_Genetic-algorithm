@@ -41,33 +41,33 @@ Lambda = Lambda15;
 Power = Power15;
 
 %% Variables definition:
-PsL                                    = 1*10^(-8);                             % wave Stokes inital value
-y                                      = 0.2261;                                 % peak SBS efficiency (called gamma)
-Alfa                                   = 0.23026*0.201e-3;                       % optical loss coefficient of the fiber 
-L                                      = 25e3;                                   % fiber length
-position_step                          = 100;                                    % position step
-z                                      = 0:position_step:L;                      % propagation position in the fiber in meters
-A                                      = -log(y*L*PsL);                          % auxiliary parameter 
-Pcr                                    = real((A+sqrt((A^2+4*A)))./(2*y*L));     % critical pump power
-Psc                                    = 1/(y*L);                                % critical Stokes power
-turns                                  = 10;                                     % number of cavity turns in the fiber
-round_trips                            = (1:turns)';                             % round trips inside of the cavity   
-stokes_lines_number                    = 18;                                     % number of output sotkes channels
-Pp0 = 0.43e-3;                                                                   % Potencia bombeio inicial [W]
-gain_dB                                = pop(1)/(sqrt(pop(2) + pop(3)*Pp0^pop(4)));                                     % EDFA gain in dBs 
-amplification                          = 10^(gain_dB/10);                        % EDF amplification factor in the second cavity
+PsL                                    = 1*10^(-8);                                 % wave Stokes inital value
+y                                      = 0.2261;                                    % peak SBS efficiency (called gamma)
+Alfa                                   = 0.23026*0.201e-3;                          % optical loss coefficient of the fiber 
+L                                      = 25e3;                                      % fiber length
+position_step                          = 100;                                       % position step
+z                                      = 0:position_step:L;                         % propagation position in the fiber in meters
+A                                      = -log(y*L*PsL);                             % auxiliary parameter 
+Pcr                                    = real((A+sqrt((A^2+4*A)))./(2*y*L));        % critical pump power
+Psc                                    = 1/(y*L);                                   % critical Stokes power
+turns                                  = 10;                                        % number of cavity turns in the fiber
+round_trips                            = (1:turns)';                                % round trips inside of the cavity   
+stokes_lines_number                    = 18;                                        % number of output sotkes channels
+Pp0                                    = 0.43e-3;                                   % Potencia bombeio inicial [W]
+gain_dB                                = pop(1)/(sqrt(pop(2) + pop(3)*Pp0^pop(4))); % EDFA gain in dBs 
+amplification                          = 10^(gain_dB/10);                           % EDF amplification factor in the second cavity
 
 %% Markers for loops:
-pos                                    = 1;                                      % position marker along the fiber
-cav_pos                                = 1;                                      % cavity turns marker
-pump_pos                               = 1;                                      % pump power marker
-stokes_pos                             = 1;                                      % multiwavelength stokes lines marker
+pos                                    = 1;                                         % position marker along the fiber
+cav_pos                                = 1;                                         % cavity turns marker
+pump_pos                               = 1;                                         % pump power marker
+stokes_pos                             = 1;                                         % multiwavelength stokes lines marker
 
 %% Couplers:
-coupler_output_1                       = 0.2;                                    % output coupling percentage of the first cavity  
-coupler_cavity_1                       = 0.8;                                    % cavity coupling percentage of the first cavity
-coupler_output_2                       = 0.19;                                    % output coupling percentage of the second cavity  
-coupler_cavity_2                       = 0.81;                                    % cavity coupling percentage of the second cavity
+coupler_output_1                       = 0.2;                                       % output coupling percentage of the first cavity  
+coupler_cavity_1                       = 0.8;                                       % cavity coupling percentage of the first cavity
+coupler_output_2                       = 0.19;                                      % output coupling percentage of the second cavity  
+coupler_cavity_2                       = 0.81;                                      % cavity coupling percentage of the second cavity
 
 %% Counters:
 count_weak                             = 0;
@@ -97,16 +97,15 @@ stokes_lines                           = zeros(turns,stokes_lines_number);
 Pp0_vector                             = zeros(1,stokes_lines_number);
 
 %%%%%%%%%%%% A partir daqui testes do dudu 14-04-20 %%%%%%%%%%%%
-gain_dB = pop(1)/(sqrt(pop(2) + pop(3)*Pp0^pop(4)));
-amplification = 10^(gain_dB/10);
 Pp0 = Pp0*amplification/2;
 fim = 0;
 
 for comp_onda = 1:stokes_lines_number
-    comp_onda;
     if comp_onda ~= 1
         y = 0.2261/2;
     end
+    gain_dB = pop(1)/(sqrt(pop(2) + pop(3)*Pp0^pop(4)));
+    amplification = 10^(gain_dB/10);
 %% First cavity:
         for cavity                     = 1:turns
                     
@@ -128,16 +127,16 @@ for comp_onda = 1:stokes_lines_number
                     fiber(:,pos)       = z;
                     pos                = pos + 1;    
                 end
-                P_Stokes               = double(real(10*log10(Psz)));            % evolution of pump power Pp(z) in dB
-                P_pump                 = double(real(10*log10(Ppz)));            % evolution of Stokes power Ps(z) in dB
+                P_Stokes               = double(real(10*log10(Psz)));               % evolution of pump power Pp(z) in dB
+                P_pump                 = double(real(10*log10(Ppz)));               % evolution of Stokes power Ps(z) in dB
             end
 
             %% High regime:
             if Pp0 > Pcr && PsL < Psc
-                E                      = PsL/Pp0;                                % auxiliary parameter    
-                k                      = y*Pp0*L;                                % auxiliary parameter 
-                A_high                 = -log(k*E);                              % auxiliary parameter 
-                fi                     = 0.1*log10(PsL)+1.7;                     % auxiliary parameter 
+                E                      = PsL/Pp0;                                   % auxiliary parameter    
+                k                      = y*Pp0*L;                                   % auxiliary parameter 
+                A_high                 = -log(k*E);                                 % auxiliary parameter 
+                fi                     = 0.1*log10(PsL)+1.7;                        % auxiliary parameter 
                 count_high             = count_high + 1;
                 for z                  = 0:position_step:L
                     c1                 = (Pp0/k)*(A_high+log(A_high*(1-A_high/k))-log(1-(1/exp(A_high)))-log(1+A_high/(k*(exp(A_high)-1))));
@@ -150,8 +149,8 @@ for comp_onda = 1:stokes_lines_number
                     fiber(:,pos)       = z;
                     pos                = pos + 1;    
                 end
-                P_Stokes               = double(real(10*log10(Psz)));            % evolution of pump power Pp(z) in dB
-                P_pump                 = double(real(10*log10(Ppz)));            % evolution of Stokes power Ps(z) in dB
+                P_Stokes               = double(real(10*log10(Psz)));               % evolution of pump power Pp(z) in dB
+                P_pump                 = double(real(10*log10(Ppz)));               % evolution of Stokes power Ps(z) in dB
             end
 
             %% Saturated regime:
@@ -168,19 +167,19 @@ for comp_onda = 1:stokes_lines_number
                     fiber(:,pos)       = z;
                     pos                = pos + 1;    
                 end
-                P_Stokes               = double(real(10*log10(Psz)));            % evolution of pump power Pp(z) in dB
-                P_pump                 = double(real(10*log10(Ppz)));            % evolution of Stokes power Ps(z) in dB
+                P_Stokes               = double(real(10*log10(Psz)));               % evolution of pump power Pp(z) in dB
+                P_pump                 = double(real(10*log10(Ppz)));               % evolution of Stokes power Ps(z) in dB
             end
-            Alpha_cav_dB               = 2;                                      % power loss due to cavity in dB
-            Alpha_cav_linear           = 10^(Alpha_cav_dB/10);                   % power loss due to cavity in a linear scale     
-            Pstokes(cav_pos,1)         = Psz(cav_pos,1)/Alpha_cav_linear;        % stokes power before output coupler
-            output_1(cav_pos,1)        = Pstokes(cav_pos,1)*coupler_output_1;    % output from the first cavity to the second one
-            PsL_cav_1(cav_pos,1)       = Pstokes(cav_pos,1)*coupler_cavity_1;    % stokes power that returns to the cavity
+            Alpha_cav_dB               = 2;                                         % power loss due to cavity in dB
+            Alpha_cav_linear           = 10^(Alpha_cav_dB/10);                      % power loss due to cavity in a linear scale     
+            Pstokes(cav_pos,1)         = Psz(cav_pos,1)/Alpha_cav_linear;           % stokes power before output coupler
+            output_1(cav_pos,1)        = Pstokes(cav_pos,1)*coupler_output_1;       % output from the first cavity to the second one
+            PsL_cav_1(cav_pos,1)       = Pstokes(cav_pos,1)*coupler_cavity_1;       % stokes power that returns to the cavity
             %% Second cavity:
-             output_2(cav_pos,1)        = output_1(cav_pos,1)*coupler_output_2;   % output of the second cavity (laser output)
-             PsL_cav_2(cav_pos,1)       = output_1(cav_pos,1)*coupler_cavity_2;   % stokes power that returns to the cavity
+             output_2(cav_pos,1)        = output_1(cav_pos,1)*coupler_output_2;     % output of the second cavity (laser output)
+             PsL_cav_2(cav_pos,1)       = output_1(cav_pos,1)*coupler_cavity_2;     % stokes power that returns to the cavity
 %             PsL_cav_2(cav_pos,1)       = PsL_cav_2(cav_pos,1);
-%             new_input_1(cav_pos,1)     = PsL_cav_2(cav_pos,1);                   % new input in the first cavity
+%             new_input_1(cav_pos,1)     = PsL_cav_2(cav_pos,1);                    % new input in the first cavity
               cav_pos                    = cav_pos + 1;                        
               pos                        = 1;
         end
@@ -284,10 +283,10 @@ Pot2 = trapz(Lambda,P2);
         osa_simulado = eixo_y(tt,:) + osa_simulado;
  end
  
- retorno = P1/max(P1);
+retorno = P1/max(P1);
 %figure(8)
 %plot(Lambda,eixo_y(6,:),'r',Lambda,P1/max(P1))
-%plot(Lambda,osa_simulado,'r',Lambda,P1/max(P1))
+plot(Lambda,osa_simulado,'r',Lambda,P1/max(P1));
 % axis([1565.5 1567 0 1.1])
 %xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
 %ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
