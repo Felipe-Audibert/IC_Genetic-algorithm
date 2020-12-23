@@ -14,15 +14,15 @@ mutrate                                     = 0.01;
 pop                                         = zeros(popsize, 4);
 new_pop                                     = zeros(popsize,4);
 generation                                  = 0;
-Diff                                        = [1:popsize];
-Vec_Prop                                    = [1:popsize];
+Diff                                        = [1:popsize/2];
+Vec_Prop                                    = [1:popsize/2];
 Vec_Sel                                     = [];
 storage_power                               = [];
 
 %% Initial pop generation %%
 
 for i=1:popsize
-    pop(i,:)                                = [7*rand()+7 3.75*rand()+0.25 (1e-5)*rand()+1e-4 3*rand()+4];
+    pop(i,:)                                = [rand()+12.5 rand()+0.5 (1e-6)*rand()+0.1e-6 rand()+3.5];
 end
 
 %% Testing the population %%
@@ -30,12 +30,10 @@ end
 while 1
 
     for i=1:popsize/2
-        [Lambda, Power, Lamb_plot]         = cascateado(Pin, pop(i,:));
-        Test_Power15                       = [Lamb_plot(420) Lamb_plot(430) Lamb_plot(440) Lamb_plot(450) Lamb_plot(460) Lamb_plot(470) Lamb_plot(480) Lamb_plot(490) Lamb_plot(500) Lamb_plot(510) Lamb_plot(520)];
-        Test_Power                         = [Power(420) Power(430) Power(440) Power(450) Power(460) Power(470) Power(480) Power(490) Power(500) Power(510) Power(520)];
-        Power_diff                         = abs((Test_Power) - (Test_Power15));
+        [Lambda, Power, Lamb_plot]         = cascateado_saturado(pop(i,:),0);
+        Power_diff                         = abs((Lamb_plot) - (Power));
         Diff(i)                            = sum(Power_diff);
-        storage_power                      = [storage_power; Power];
+        storage_pop                        = [storage_pop;pop];
     end
 
 %% Crossover %%
@@ -67,7 +65,7 @@ while 1
                 if j==1
                     new_pop(i,j)           = 10*rand()+5;
                 elseif j==2
-                    new_pop(i,j)           = 3.75*rand()+0.25;
+                    new_pop(i,j)           = rand()+0.5;
                 elseif j==3
                     new_pop(i,j)           = (1e-5)*rand()+1e-4;
                 else
@@ -77,9 +75,9 @@ while 1
         end
     end
     
-    if sum(Diff)<0.5 || generation>20
-        disp(min(Diff));
-        plot(Lambda,Power,'r',Lambda,Lamb_plot);
+    if min(Diff)<0.3 || generation>20
+        min(Diff)
+        plot(Lambda,Power,Lambda,Lamb_plot,'r');
         toc
         break
     end
@@ -89,5 +87,5 @@ while 1
     Vec_Sel                                = [];
     pop                                    = new_pop;
     generation                             = generation+1;
-    disp(sum(Diff));
+    disp(min(Diff));
 end
