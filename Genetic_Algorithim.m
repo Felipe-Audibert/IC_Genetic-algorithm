@@ -8,16 +8,18 @@ clock
 
 %% Variable definition %%
 
+max_generation                              = 20;
 Pin                                         = 280e-3;
 popsize                                     = 40;
 mutrate                                     = 0.01;
 pop                                         = zeros(popsize, 4);
 new_pop                                     = zeros(popsize,4);
-generation                                  = 0;
-Diff                                        = [1:popsize/2];
-Vec_Prop                                    = [1:popsize/2];
+generation                                  = 1;
+Diff                                        = 1:popsize/2;
+Vec_Prop                                    = 1:popsize/2;
 Vec_Sel                                     = [];
-storage_power                               = [];
+storage_pop                                 = zeros(popsize,4,max_generation);
+storage_Diff                                = zeros(length(Diff),max_generation);
 
 %% Initial pop generation %%
 
@@ -31,11 +33,13 @@ while 1
 
     for i=1:popsize/2
         [Lambda, Power, Lamb_plot]         = cascateado_saturado(pop(i,:),0);
-        Power_diff                         = abs((Lamb_plot) - (Power));
+        Power_diff                         = abs((Power) - (Lamb_plot'));
         Diff(i)                            = sum(Power_diff);
-        storage_pop                        = [storage_pop;pop];
     end
 
+    storage_pop(:,:,generation)            = pop;
+    storage_Diff(:,generation)             = Diff';
+    
 %% Crossover %%
     Vec_Prop(:)                            = 1 - Diff(:)/sum(Diff);
     
@@ -63,19 +67,19 @@ while 1
         for j=1:length(pop(1))
             if rand()<mutrate
                 if j==1
-                    new_pop(i,j)           = 10*rand()+5;
+                    new_pop(i,j)           = rand()+12.5;
                 elseif j==2
                     new_pop(i,j)           = rand()+0.5;
                 elseif j==3
-                    new_pop(i,j)           = (1e-5)*rand()+1e-4;
+                    new_pop(i,j)           = (1e-6)*rand()+0.1e-6;
                 else
-                    new_pop(i,j)           = 3*rand()+4;
+                    new_pop(i,j)           = rand()+3.5;
                 end
             end
         end
     end
     
-    if min(Diff)<0.3 || generation>20
+    if min(Diff)<0.3 || generation>max_generation-1
         min(Diff)
         plot(Lambda,Power,Lambda,Lamb_plot,'r');
         toc

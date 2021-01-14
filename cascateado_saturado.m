@@ -38,7 +38,7 @@ Lambda = Lambda15;
 Power = Power15;
 
 %% Variables definition: 
-PsL                                    = 1*10^(-8);                             % wave Stokes inital value
+PsL                                    = 1*10^(-8);                              % wave Stokes inital value
 y                                      = 0.2261;                                 % peak SBS efficiency (called gamma)
 Alfa                                   = 0.23026*0.201e-3;                       % optical loss coefficient of the fiber 
 L                                      = 25e3;                                   % fiber length
@@ -49,10 +49,8 @@ Pcr                                    = real((A+sqrt((A^2+4*A)))./(2*y*L));    
 Psc                                    = 1/(y*L);                                % critical Stokes power
 turns                                  = 10;                                     % number of cavity turns in the fiber
 round_trips                            = (1:turns)';                             % round trips inside of the cavity   
-%gain_dB                                = 12;                                     % EDFA gain in dBs 
-%amplification                          = 10^(gain_dB/10);                        % EDF amplification factor in the second cavity
 stokes_lines_number                    = 18;                                     % number of output sotkes channels
-Pp0 = 0.43e-3;                              % Potencia bombeio inicial [W]
+Pp0                                    = 0.43e-3;                                % Potencia bombeio inicial [W]
 
 %% Markers for loops:
 pos                                    = 1;                                      % position marker along the fiber
@@ -63,8 +61,8 @@ stokes_pos                             = 1;                                     
 %% Couplers:
 coupler_output_1                       = 0.2;                                    % output coupling percentage of the first cavity  
 coupler_cavity_1                       = 0.8;                                    % cavity coupling percentage of the first cavity
-coupler_output_2                       = 0.19;                                    % output coupling percentage of the second cavity  
-coupler_cavity_2                       = 0.81;                                    % cavity coupling percentage of the second cavity
+coupler_output_2                       = 0.19;                                   % output coupling percentage of the second cavity  
+coupler_cavity_2                       = 0.81;                                   % cavity coupling percentage of the second cavity
 
 %% Counters:
 count_weak                             = 0;
@@ -216,10 +214,10 @@ Pot_depois_edfa_total = sum(real(bombeio))*1e3;
 %[pks680,locs680]                       = findpeaks(real(Power3(405:end-160)),Lambda3(405:end-160),'MinPeakDistance',(Lambda3(2)-Lambda3(1))*20);
 %[pks880,locs880]                       = findpeaks(real(Power4(405:end-160)),Lambda4(405:end-160),'MinPeakDistance',(Lambda4(2)-Lambda4(1))*20);
 %[pks980,locs980]                       = findpeaks(real(Power5(405:end-160)),Lambda5(405:end-160),'MinPeakDistance',(Lambda5(2)-Lambda5(1))*20);
-% [pks1080,locs1080]                     = findpeaks(real(Power6(405:end-150)),Lambda6(405:end-150),'MinPeakDistance',(Lambda6(2)-Lambda6(1))*20);
+% [pks1080,locs1080]                    = findpeaks(real(Power6(405:end-150)),Lambda6(405:end-150),'MinPeakDistance',(Lambda6(2)-Lambda6(1))*20);
 %[pks1080,locs1080]                     = findpeaks(real(Power6(405:end-270)),Lambda6(405:end-270),'MinPeakDistance',(Lambda6(2)-Lambda6(1))*20);
 Power= 10*log10((Power)/1e-3);
-[pks480,locs480]                       = findpeaks(real(Power(405:end-200)),Lambda(405:end-200),'MinPeakDistance',(Lambda(2)-Lambda(1))*19);
+[pks480,locs480]                        = findpeaks(real(Power(405:end-200)),Lambda(405:end-200),'MinPeakDistance',(Lambda(2)-Lambda(1))*19);
 
 
 %figure(4)
