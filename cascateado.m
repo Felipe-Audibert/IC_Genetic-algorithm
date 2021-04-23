@@ -97,6 +97,8 @@ stokes_lines                           = zeros(turns,stokes_lines_number);
 Pp0_vector                             = zeros(1,stokes_lines_number);
 
 %%%%%%%%%%%% A partir daqui testes do dudu 14-04-20 %%%%%%%%%%%%
+gain_dB = pop(1)/(sqrt(pop(2) + pop(3)*(Pp0*1e3/2)^pop(4))); % EDFA gain in dBs 
+amplification = 10^(gain_dB/10);
 Pp0 = Pp0*amplification/2;
 fim = 0;
 
@@ -104,8 +106,6 @@ for comp_onda = 1:stokes_lines_number
     if comp_onda ~= 1
         y = 0.2261/2;
     end
-    gain_dB = pop(1)/(sqrt(pop(2) + pop(3)*Pp0^pop(4)));
-    amplification = 10^(gain_dB/10);
 %% First cavity:
         for cavity                     = 1:turns
                     
