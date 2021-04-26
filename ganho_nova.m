@@ -1,4 +1,4 @@
-function [outputArg1] = ganho(inputArg1,pop)
+function [outputArg1] = ganho(Pinf,GmaxPsat)
 warning off all
 %GANHO Summary of this function goes here
 %   Detailed explanation goes here
@@ -9,14 +9,12 @@ warning off all
 % D = pop(4);
 % GdB = A/(sqrt(B + C*Pin^D));
 
-Gmax = num2str(pop(1));
-Psat = num2str(pop(2));
-Pin = num2str(double(inputArg1));
+Pinf = 10*log10(Pinf*1e3);  %Tá em dBm
+syms G Psat Pin Gmax; 
+s = 'G=1+(Psat/Pin)*log(Gmax/G)';
+s = subs(s,[Psat, Pin, Gmax],[GmaxPsat(2), Pinf, GmaxPsat(1)]);
 
-syms G;
-
-s = strcat('G=1+(',Psat,'/',Pin,')*log(',Gmax,'/G)');
-GdB = solve(s,G);
+GdB = double(solve(s,G));
 
 outputArg1 = 10^(GdB/10);
 
