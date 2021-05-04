@@ -34,13 +34,12 @@ while 1
 
     for i=1:popsize/2
         [Lambda, Power, Lamb_plot]  = cascateado_dudu(pop(i,:),0);
-        if length(findpeaks(real(Lamb_plot(400:800)'),'MinPeakDistance',20)) == 18
-            Diff(i)                 = sum(abs(findpeaks(real(Power(400:800)),'MinPeakDistance',20)-findpeaks(real(Lamb_plot(400:800)'),'MinPeakDistance',20)));
-        else
-            Diff(i)                 = sum(abs(findpeaks(real(Power(400:690)),'MinPeakDistance',20)-findpeaks(real(Lamb_plot(400:690)'),'MinPeakDistance',20)));
-%        Power_diff                         = abs((Power) - (Lamb_plot'));
-%        Diff(i)                      = sum(Power_diff)
-        end
+%         if length(findpeaks(real(Lamb_plot(400:800)'),'MinPeakDistance',20)) == 18
+%             Diff(i)                 = sum(abs(findpeaks(real(Power(400:800)),'MinPeakDistance',20)-findpeaks(real(Lamb_plot(400:800)'),'MinPeakDistance',20)));
+%         else
+%             Diff(i)                 = sum(abs(findpeaks(real(Power(400:690)),'MinPeakDistance',20)-findpeaks(real(Lamb_plot(400:690)'),'MinPeakDistance',20)));
+        Power_diff                   = abs((Power) - (Lamb_plot'));
+        Diff(i)                      = sum(Power_diff)
     end
 
     storage_pop(:,:,generation)            = pop;
