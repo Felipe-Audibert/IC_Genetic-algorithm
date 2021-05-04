@@ -48,19 +48,13 @@ while 1
 %% Crossover %%
     Vec_Prop(:)                            = 1 - Diff(:)/sum(Diff);
     
-    for i=1:popsize/2
+    for i=1:popsize
         Vec_Sel                            = [Vec_Sel ones(1,round(Vec_Prop(i)*1000))*i];
     end
     for i=1:popsize/2
-        Cross                              = [Vec_Sel(round(rand()*(length(Vec_Sel)))) round(rand()*(popsize/2-1)+popsize/2+1)];
-        chance = rand();
-        if chance<=0.5
-            new_pop(i,:)                     = [pop(Cross(1),1) pop(Cross(2),2)];
-            new_pop(i+popsize/2,:)           = [pop(Cross(2),1) pop(Cross(1),2)];
-        else
-            new_pop(i,:)                     = [pop(Cross(1),1) pop(Cross(1),2)];
-            new_pop(i+popsize/2,:)           = [pop(Cross(2),1) pop(Cross(2),2)];
-        end
+        Cross                              = [Vec_Sel(ceil(rand()*length(Vec_Sel))) Vec_Sel(ceil(rand()*length(Vec_Sel)));];
+        new_pop(i,:)                       = [pop(Cross(1),1) pop(Cross(2),2)];
+        new_pop(i+popsize/2,:)             = [pop(Cross(2),1) pop(Cross(1),2)];
     end
     for i=1:popsize
         for j=1:length(pop(1))
