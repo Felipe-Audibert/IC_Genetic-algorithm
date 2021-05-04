@@ -12,7 +12,7 @@
 % Moreover, the laser cavity is constructed and the pump power is scanned 
 % to compare the laser output with the NZDSF fiber experimental data.
 
-function [Lambda retorno osa_simulado] = cascateado_saturado(pop,ifplot)  
+function [Lambda retorno osa_simulado] = cascateado_dudu(pop,ifplot)  
 
 %% Load MWBFL experimental results:
 % load('Lambda')
