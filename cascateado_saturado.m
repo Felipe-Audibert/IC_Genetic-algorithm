@@ -93,7 +93,7 @@ stokes_lines                           = zeros(turns,stokes_lines_number);
 Pp0_vector                             = zeros(1,stokes_lines_number);
 
 %%%%%%%%%%%% A partir daqui testes do dudu 14-04-20 %%%%%%%%%%%%
-Pp0 = Pp0*ganho(Pp0/2,pop)/2;
+Pp0 = Pp0*ganho_sym_2020(Pp0/2,pop)/2;
 Pp0in= Pp0;
 fim = 0;
 
@@ -184,9 +184,9 @@ for comp_onda = 1:stokes_lines_number
         Pot_saida_dB(comp_onda) = 10*log10(Pot_saida(comp_onda));
         bombeio(comp_onda) = Pp0;
         pot_atual_bom = real(sum(bombeio)+Pp0in);
-        Pp0 = PsL_cav_2(cav_pos-1,1)*ganho(PsL_cav_2(cav_pos-1,1)/2 + pot_atual_bom/2,pop)/2;
-        bombeio_pre_edfa(comp_onda) = Pp0/ganho(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,pop)+pot_atual_bom/2;
-        Ganho_EDFA(comp_onda) = ganho(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,pop);
+        Pp0 = PsL_cav_2(cav_pos-1,1)*ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + pot_atual_bom/2,pop)/2;
+        bombeio_pre_edfa(comp_onda) = Pp0/ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,pop)+pot_atual_bom/2;
+        ganho_sym_2020_EDFA(comp_onda) = ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,pop);
         
 end
 % figure(1)
@@ -202,8 +202,8 @@ end
 %plot(1:comp_onda,real(bombeio_pre_edfa)*1e3,'o')
 %ylabel('Potência entrando no EDFA [mW]')
 %figure(9)
-%plot(1:comp_onda,real(10.*log10(Ganho_EDFA)),'o')
-%ylabel('Ganho do EDFA [dB]')
+%plot(1:comp_onda,real(10.*log10(ganho_sym_2020_EDFA)),'o')
+%ylabel('ganho_sym_2020 do EDFA [dB]')
 
 %%%%%%% Potencias totais em mW %%%%%%%
 Pot_saida_total = sum(real(Pot_saida))*1e3;
@@ -288,7 +288,7 @@ retorno = P1/max(P1);
 if ifplot
     figure(8)
     %plot(Lambda,eixo_y(6,:),'r',Lambda,P1/max(P1))
-    plot(Lambda,osa_simulado,'r',Lambda,P1/max(P1))
+    plot(Lambda,osa_simulado,'r',Lambda,P1/max(P1),'b')
     % axis([1565.5 1567 0 1.1])
     %xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
     %ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')

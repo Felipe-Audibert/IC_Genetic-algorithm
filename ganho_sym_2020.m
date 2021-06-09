@@ -11,8 +11,8 @@ warning off all
 
 %Pinf = 10*log10(Pinf*1e3);  %Tá em dBm
 syms G Psat Pin Gmax; 
-s = 'G=1+(Psat/Pin)*log(Gmax/G)';
-s = subs(s,[Psat, Pin, Gmax],[GmaxPsat(2), Pinf, GmaxPsat(1)]);
+s = str2sym('G=1+(Psat/Pin)*log(Gmax/G)');
+s = subs(s,{Psat, Pin, Gmax},{GmaxPsat(2), Pinf, GmaxPsat(1)});
 
 GdB = double(solve(s,G));
 outputArg1 = 10.^(GdB/10);

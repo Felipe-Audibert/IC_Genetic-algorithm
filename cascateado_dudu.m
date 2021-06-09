@@ -89,7 +89,7 @@ output_2                               = zeros(turns,1);
 new_input_1                            = zeros(turns,1);
 stokes_lines                           = zeros(turns,stokes_lines_number);
 Pp0_vector                             = zeros(1,stokes_lines_number);
-Pp0 = Pp0*ganho(Pp0/2,pop)/2;
+Pp0 = Pp0*ganho_sym_2020(Pp0/2,pop)/2;
 Pp0in= Pp0;
 fim = 0;
 
@@ -176,9 +176,9 @@ for comp_onda = 1:stokes_lines_number
     Pot_saida_dB(comp_onda) = 10*log10(Pot_saida(comp_onda));
     bombeio(comp_onda) = Pp0;
     pot_atual_bom = real(sum(bombeio)+Pp0in);
-    Pp0 = PsL_cav_2(cav_pos-1,1)*ganho(PsL_cav_2(cav_pos-1,1)/2 + pot_atual_bom/2,pop)/2;
-    bombeio_pre_edfa(comp_onda) = Pp0/ganho(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,pop)+pot_atual_bom/2;
-    Ganho_EDFA(comp_onda) = ganho(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,pop);
+    Pp0 = PsL_cav_2(cav_pos-1,1)*ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + pot_atual_bom/2,pop)/2;
+    bombeio_pre_edfa(comp_onda) = Pp0/ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,pop)+pot_atual_bom/2;
+    ganho_sym_2020_EDFA(comp_onda) = ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,pop);
     
 end
 if ifplot
@@ -196,8 +196,8 @@ if ifplot
     plot(1:comp_onda,real(bombeio_pre_edfa)*1e3,'o')
     ylabel('Potência entrando no EDFA [mW]')
     figure(9)
-    plot(1:comp_onda,real(10.*log10(Ganho_EDFA)),'o')
-    ylabel('Ganho do EDFA [dB]')
+    plot(1:comp_onda,real(10.*log10(ganho_sym_2020_EDFA)),'o')
+    ylabel('ganho_sym_2020 do EDFA [dB]')
 end
     %%%%%%% Potencias totais em mW %%%%%%%
     Pot_saida_total = sum(real(Pot_saida))*1e3;
@@ -219,28 +219,17 @@ end
     aux = aux.';
     L2 = 10.^(aux/10);
     
-    if ifplot
-        figure(10)
-        subplot(1,2,1)
-        plot(pks480-max(pks480),'-o')
-        hold on
-        subplot(1,2,1)
-        plot(1:comp_onda,real(Pot_saida_dBm)-max(real(Pot_saida_dBm)),'-o')
-        hold off
-        xlabel('Comprimentos de onda gerados')
-        ylabel('Intensity [a. u. dB]')
-        plot(1:comp_onda,Pot_saida_dBm,'o')
-        ylabel('Potência na saída do laser [dBm]')
-        figure(4)
-        subplot(1,2,2)
-        plot(L1,'-o')
-        hold on
-        subplot(1,2,2)
-        plot(1:comp_onda,L2,'-xr')
-        hold off
-        ylabel('Intensity [a. u. linear]')
-        xlabel('Comprimentos de onda gerados')
-    end
+%     if ifplot
+%         figure(4)
+%         subplot(1,2,2)
+%         plot(L1,'-o')
+%         hold on
+%         subplot(1,2,2)
+%         plot(1:comp_onda,L2,'-xr')
+%         hold off
+%         ylabel('Intensity [a. u. linear]')
+%         xlabel('Comprimentos de onda gerados')
+%     end
     %%%%% Calculo de R^2 do ajuste da curva linear %%%%%%%%
     SSr = sum(abs(L2-L1));
     SSt = sum(abs(L1-mean(L1)));
@@ -279,31 +268,23 @@ end
     end
     
     retorno = P1/max(P1);
-    
     if ifplot
-        figure(8)
+        figure(6)
         %plot(Lambda,eixo_y(6,:),'r',Lambda,P1/max(P1))
         %plot(Lambda,'r',P1/max(P1))
-        plot(Lambda,P1/max(P1),'r')
+        plot(Lambda(428:end),P1(428:end)/max(P1(428:end)),'r')
         hold on
-        plot(Lambda,osa_simulado,'b')
-        axis([1565.5 1567 0 1.1]);
+        plot(Lambda(428:end),osa_simulado(428:end),'b')
+%       axis([1565.5 1567 0 1.1]);
         xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
         ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
         legend('Experimental','Analytical solution','FontSize',16,'FontWeight','bold')
-        axis([1565.5 1567.5 -0.02 1.1]);
+%       axis([1565.5 1567.5 -0.02 1.1]);
         plt = gca;
         plt.YAxis(1).Color = 'k';
         plt.XAxis(1).Color = 'k';
         set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
         set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
-        
-        
-        %%%%%%%%%%%%%
-        figure(6)
-        plot(Lambda,P1)
-        figure(7)
-        plot(Lambda15,P2)
     end
     % erro = (1-Pot_saida_total/Pot1)*100;             % erro percentual entre valor de potência na saida "medido" e simualdo
 end

@@ -16,37 +16,34 @@ mutrate                                     = 0.02;
 pop                                         = zeros(popsize, 2);
 new_pop                                     = zeros(popsize,2);
 generation                                  = 1;
-Diff                                        = 1:popsize/2;
-Vec_Prop                                    = 1:popsize/2;
+Diff                                        = zeros(1,popsize);
+Vec_Prop                                    = 1:popsize;
 Vec_Sel                                     = [];
 storage_pop                                 = zeros(popsize,2,max_generation);
 storage_Diff                                = zeros(length(Diff),max_generation);
+val                                         = 4;
+ind                                         = [15 15 1000 1]
 
 %% Initial pop generation %%
 
 for i=1:popsize
-    pop(i,:)                                = [15*rand()+15 1000*rand()+1];
+    pop(i,:)                                = [ind(1)*rand()+ind(2) ind(3)*rand()+ind(4)];
 end
 
 %% Testing the population %%
 
 while 1
 
-    for i=1:popsize/2
+    for i=1:popsize
         [Lambda, Power, Lamb_plot]  = cascateado_dudu(pop(i,:),0);
-%         if length(findpeaks(real(Lamb_plot(400:800)'),'MinPeakDistance',20)) == 18
-%             Diff(i)                 = sum(abs(findpeaks(real(Power(400:800)),'MinPeakDistance',20)-findpeaks(real(Lamb_plot(400:800)'),'MinPeakDistance',20)));
-%         else
-%             Diff(i)                 = sum(abs(findpeaks(real(Power(400:690)),'MinPeakDistance',20)-findpeaks(real(Lamb_plot(400:690)'),'MinPeakDistance',20)));
-        Power_diff                   = abs((Power) - (Lamb_plot'));
-        Diff(i)                      = sum(Power_diff)
+        Diff(i)                        = sum(abs(abs(Lamb_plot(428:end).') - abs(Power(428:end))));
     end
 
     storage_pop(:,:,generation)            = pop;
     storage_Diff(:,generation)             = Diff';
     
 %% Crossover %%
-    Vec_Prop(:)                            = 1 - Diff(:)/sum(Diff);
+    Vec_Prop                            = (1./Diff).^val;
     
     for i=1:popsize
         Vec_Sel                            = [Vec_Sel ones(1,round(Vec_Prop(i)*1000))*i];
@@ -60,9 +57,9 @@ while 1
         for j=1:length(pop(1))
             if rand()<mutrate
                 if j==1
-                    new_pop(i,j)             = 15*rand()+15;
+                    new_pop(i,j)             = ind(1)*rand()+ind(2);
                 else
-                    new_pop(i,j)             = 1000*rand()+1;
+                    new_pop(i,j)             = ind(3)*rand()+ind(4);
                 end
             end
         end
@@ -70,7 +67,6 @@ while 1
     
     if min(Diff)<0.3 || generation>max_generation-1
         min(Diff)
-        plot(Lambda,Power,Lambda,Lamb_plot,'r');
         toc
         break
     end
