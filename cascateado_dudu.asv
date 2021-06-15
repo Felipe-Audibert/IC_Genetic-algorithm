@@ -14,7 +14,6 @@
 
 function [Lambda, retorno, osa_simulado] = cascateado_dudu(EDFA, Pin, Gmax, Psat, ifplot)  
 
-%% Finding Workspace number %%
 vec_EDFA                                = [0.12 0.15 0.17 0.2 0.22 0.25 0.28];
 vec_Pin                                 = [1 0.43 0.68 4.01 14].*1e-3;
 
@@ -43,15 +42,14 @@ if num_workspace<=9
 elseif num_workspace<=99
     workspace_name                      = strcat('Workspace_0', num2str(num_workspace));
 else
-    error('Workspace number is invalid');
+    error('workspace number is invalid');
     return;
 end
 
 if vec_Pin(pos_Pin)<1e-3
     file_path = strcat('1565nm_BP_',num2str(vec_Pin(pos_Pin)*1e3),'0mW', '/', workspace_name, '.mat');
 elseif vec_Pin(pos_Pin)>=1e-3
-    file_path = strcat('1565nm_BP_',num2str(vec_Pin(pos_Pin)*1e3),'mW', '/', workspace_name, '.mat');
-end
+    file_path = strcat('1565nm_BP_',num2str(vec_Pin(pos_Pin)*1e3),'0mW', '/', workspace_name, '.mat');
 
 %% Load new data (Dudu)
 load(file_path)
@@ -71,7 +69,7 @@ Psc                                    = 1/(y*L);                               
 turns                                  = 10;                                     % number of cavity turns in the fiber
 round_trips                            = (1:turns)';                             % round trips inside of the cavity   
 stokes_lines_number                    = 18;                                     % number of output sotkes channels
-Pp0                                    = Pin;                               % Potencia bombeio inicial [W]
+Pp0                                    = Pin*1e-3;                               % Potencia bombeio inicial [W]
 
 %% Markers for loops:
 pos                                    = 1;                                      % position marker along the fiber

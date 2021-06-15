@@ -1,4 +1,4 @@
-function [outputArg1] = ganho(Pinf,GmaxPsat)
+function [outputArg1] = ganho_sym_2020(Pin_in, Gmax_in, Psat_in)
 warning off all
 %GANHO Summary of this function goes here
 %   Detailed explanation goes here
@@ -12,7 +12,7 @@ warning off all
 %Pinf = 10*log10(Pinf*1e3);  %Tá em dBm
 syms G Psat Pin Gmax; 
 s = str2sym('G=1+(Psat/Pin)*log(Gmax/G)');
-s = subs(s,{Psat, Pin, Gmax},{GmaxPsat(2), Pinf, GmaxPsat(1)});
+s = subs(s,{Psat, Pin, Gmax},{Psat_in, Pin_in, Gmax_in});
 
 GdB = double(solve(s,G));
 outputArg1 = 10.^(GdB/10);
