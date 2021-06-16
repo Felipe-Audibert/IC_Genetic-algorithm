@@ -69,12 +69,12 @@ for Pin=Vec_Pin
             end
         end
         if Generation<=9
-            disp(strcat('End of 0',num2str(Generation),' Generation. Mean_Diff= ',num2str(mean(Diff))));
+            disp(strcat('End of 0',num2str(Generation),' Generation. Mean_Diff=  ',num2str(mean(Diff))));
         else
-            disp(strcat('End of  ',num2str(Generation),' Generation. Mean_Diff= ',num2str(mean(Diff))));
+            disp(strcat('End of  ',num2str(Generation),' Generation. Mean_Diff=  ',num2str(mean(Diff))));
         end    
         if min(Diff)<0.3 || Generation>=Max_Generation
-            disp(strcat('             ---------------     END OF TESTS FOR Pin= ', num2str(Pin*1e3), 'mW     ---------------'));
+            disp(strcat('             ---------------     END OF TESTS FOR Pin=  ', num2str(Pin*1e3), 'mW     ---------------'));
             break
         end
         Generation                             = Generation+1;
