@@ -9,75 +9,77 @@ clock
 
 %% Variable definition %%
 
-max_generation                              = 20;
+Max_Generation                              = 20;
 EDFA                                        = 280e-3;
-Pin                                         = 0.43e-3;
-popsize                                     = 20;
-mutrate                                     = 0.02;
-pop                                         = zeros(popsize, 2);
-new_pop                                     = zeros(popsize,2);
-generation                                  = 1;
-Diff                                        = zeros(1,popsize);
-Vec_Prop                                    = 1:popsize;
+Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
+Popsize                                     = 20;
+Mutrate                                     = 0.02;
+Pop                                         = zeros(Popsize, 2);
+New_Pop                                     = zeros(Popsize,2);
+Diff                                        = zeros(1,Popsize);
+Vec_Prop                                    = 1:Popsize;
 Vec_Sel                                     = [];
-storage_pop                                 = zeros(popsize,2,max_generation);
-storage_Diff                                = zeros(length(Diff),max_generation);
-ctrl                                        = 1;
-lim                                         = [13 30 1 1000]; %Limits of individuals generation
+Storage_Pop                                 = zeros(Popsize,2,Max_Generation,length(Vec_Pin));
+Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
+Ctrl                                        = 1; %Control of the valorization of the best individual
+Lim                                         = [13 30 1 1000]; %Limits of individuals Generation
+filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
-%% Initial pop generation %%
-
-for i=1:popsize
-    pop(i,:)                                = [lim(1)+rand()*(lim(2)-lim(1)) lim(3)+rand()*(lim(4)-lim(3))];
-end
-
-%% Testing the population %%
-
-while 1
-
-    for i=1:popsize
-        [Lambda, Power, Lamb_plot]  = cascateado_dudu(EDFA, Pin, pop(i,1), pop(i,2), 0);
-        Diff(i)                        = sum(abs(abs(Lamb_plot(426:end).') - abs(Power(426:end))));
+%% Initial Pop Generation %%
+for Pin=Vec_Pin
+    Generation                                  = 1;
+    for i=1:Popsize
+        Pop(i,:)                                = [Lim(1)+rand()*(Lim(2)-Lim(1)) Lim(3)+rand()*(Lim(4)-Lim(3))];
     end
-
-    storage_pop(:,:,generation)            = pop;
-    storage_Diff(:,generation)             = Diff';
+    while not(isempty(find(Pop==[20.6795669933805,8.81247327576556]))) %O código não funciona para estes valores
+        Pop(i,:)                                = [Lim(1)+rand()*(Lim(2)-Lim(1)) Lim(3)+rand()*(Lim(4)-Lim(3))];
+    end
+    %% Testing the Population %%
     
-%% Crossover %%
-    Vec_Prop                            = (1./Diff).^ctrl;
-    
-    for i=1:popsize
-        Vec_Sel                            = [Vec_Sel ones(1,round(Vec_Prop(i)*1000))*i];
-    end
-    for i=1:popsize/2
-        Cross                              = [Vec_Sel(ceil(rand()*length(Vec_Sel))) Vec_Sel(ceil(rand()*length(Vec_Sel)))];
-        new_pop(i,:)                       = [pop(Cross(1),1) pop(Cross(2),2)];
-        new_pop(i+popsize/2,:)             = [pop(Cross(2),1) pop(Cross(1),2)];
-    end
-    for i=1:popsize
-        for j=1:length(pop(1))
-            if rand()<mutrate
-                if j==1
-                    new_pop(i,j)             = lim(1)+rand()*(lim(2)-lim(1));
-                else
-                    new_pop(i,j)             = lim(3)+rand()*(lim(4)-lim(3));
+    while 1
+        
+        for i=1:Popsize
+            [Lambda, Power, Lamb_plot]          = cascateado_dudu(EDFA, Pin, Pop(i,1), Pop(i,2), 0);
+            Diff(i)                             = sum(abs(abs(Lamb_plot(426:end).') - abs(Power(426:end))));
+        end
+        
+        Storage_Pop(:,:,Generation)            = Pop;
+        Storage_Diff(:,Generation)             = Diff';
+        
+        %% Crossover %%
+        Vec_Prop                            = (1./Diff).^Ctrl;
+        
+        for i=1:Popsize
+            Vec_Sel                            = [Vec_Sel ones(1,round(Vec_Prop(i)*1000))*i];
+        end
+        for i=1:Popsize/2
+            Cross                              = [Vec_Sel(ceil(rand()*length(Vec_Sel))) Vec_Sel(ceil(rand()*length(Vec_Sel)))];
+            New_Pop(i,:)                       = [Pop(Cross(1),1) Pop(Cross(2),2)];
+            New_Pop(i+Popsize/2,:)             = [Pop(Cross(2),1) Pop(Cross(1),2)];
+        end
+        for i=1:Popsize
+            for j=1:length(Pop(1))
+                if rand()<Mutrate
+                    if j==1
+                        New_Pop(i,j)             = Lim(1)+rand()*(Lim(2)-Lim(1));
+                    else
+                        New_Pop(i,j)             = Lim(3)+rand()*(Lim(4)-Lim(3));
+                    end
                 end
             end
         end
+        if Generation<=9
+            disp(strcat('End of 0',num2str(Generation),' Generation. Mean_Diff= ',num2str(mean(Diff))));
+        else
+            disp(strcat('End of  ',num2str(Generation),' Generation. Mean_Diff= ',num2str(mean(Diff))));
+        end    
+        if min(Diff)<0.3 || Generation>=Max_Generation
+            disp(strcat('             ---------------     END OF TESTS FOR Pin= ', num2str(Pin*1e3), 'mW     ---------------'));
+            break
+        end
+        Generation                             = Generation+1;
+        Vec_Sel                                = [];
+        Pop                                    = New_Pop;
     end
-    
-    if min(Diff)<0.3 || generation>=max_generation
-        [line column]                       = find(min(min(storage_Diff)));
-        best_individual                     = storage_pop(line,:,column)
-        best_individual_Diff                = min(storage_Diff)
-        toc
-        break
-    end
-    
-    format shortg
-    clock
-    Vec_Sel                                = [];
-    pop                                    = new_pop;
-    generation                             = generation+1;
-    disp(mean(Diff));
 end
+save(filepath,'Storage_Pop','Storage_Diff');

@@ -15,49 +15,37 @@
 function [Lambda, retorno, osa_simulado] = cascateado_dudu(EDFA, Pin, Gmax, Psat, ifplot)  
 
 %% Finding Workspace number %%
-vec_EDFA                                = [0.12 0.15 0.17 0.2 0.22 0.25 0.28];
-vec_Pin                                 = [1 0.43 0.68 4.01 14].*1e-3;
+Vec_EDFA                                = [0.12 0.15 0.17 0.2 0.22 0.25 0.28];
+Vec_Pin                                 = [1 0.43 0.68 4.01 14].*1e-3;
+Workspaces                              = [1 2 4 3 5 6 7; 9 10 11 12 13 14 15; 16 17 18 19 20 21 22; 25 26 27 28 29 30 31; 32 33 34 35 36 37 38];
 
-pos_EDFA                                = find(vec_EDFA==EDFA);
-pos_Pin                                 = find(vec_Pin==Pin);
+lin_EDFA                                = find(Vec_EDFA==EDFA);
+col_Pin                                 = find(Vec_Pin==Pin);
 
-if          pos_Pin==1
-    num_workspace                       = pos_EDFA;
-elseif      pos_Pin<=3
-    num_workspace                       = pos_EDFA + 8 + (pos_Pin-2)*7;
-elseif      pos_Pin<=5
-    num_workspace                       = pos_EDFA + 24 +(pos_Pin-4)*7;
-elseif      isempty(pos_Pin)
+if      isempty(col_Pin)
     error('Value of Pin is not available');
-    return;
-elseif      isempty(pos_EDFA)
+elseif      isempty(lin_EDFA)
     error('Value of EDFA is not available');
-    return;
 else
-    error('Something wrong ocurred');
-    return;
 end
 
-if num_workspace<=9
-    workspace_name                      = strcat('Workspace_00', num2str(num_workspace));
-elseif num_workspace<=99
-    workspace_name                      = strcat('Workspace_0', num2str(num_workspace));
+Num_Workspace                           = Workspaces(col_Pin,lin_EDFA);
+
+if Num_Workspace<=9
+    Workspace_Name                      = strcat('Workspace_00', num2str(Num_Workspace));
+elseif Num_Workspace<=99
+    Workspace_Name                      = strcat('Workspace_0', num2str(Num_Workspace));
 else
     error('Workspace number is invalid');
-    return;
 end
 
-if vec_Pin(pos_Pin)<1e-3
-    file_path = strcat('1565nm_BP_',num2str(vec_Pin(pos_Pin)*1e3),'0mW', '/', workspace_name, '.mat');
-elseif vec_Pin(pos_Pin)>=1e-3
-    file_path = strcat('1565nm_BP_',num2str(vec_Pin(pos_Pin)*1e3),'mW', '/', workspace_name, '.mat');
-end
+    file_path = strcat('1565nm_BP_',num2str(Pin*1e3),'mW', '/', Workspace_Name, '.mat');
 
 %% Load new data (Dudu)
 load(file_path)
 
-Lambda = eval(['Lambda' num2str(num_workspace)]);
-Power = eval(['Power' num2str(num_workspace)]);
+Lambda = eval(['Lambda' num2str(Num_Workspace)]);
+Power = eval(['Power' num2str(Num_Workspace)]);
 %% Variables definition: 
 PsL                                    = 1*10^(-8);                              % wave Stokes inital value
 y                                      = 0.2261;                                 % peak SBS efficiency (called gamma)
@@ -71,7 +59,7 @@ Psc                                    = 1/(y*L);                               
 turns                                  = 10;                                     % number of cavity turns in the fiber
 round_trips                            = (1:turns)';                             % round trips inside of the cavity   
 stokes_lines_number                    = 18;                                     % number of output sotkes channels
-Pp0                                    = Pin;                               % Potencia bombeio inicial [W]
+Pp0                                    = Pin;                                    % Potencia bombeio inicial [W]
 
 %% Markers for loops:
 pos                                    = 1;                                      % position marker along the fiber
@@ -101,15 +89,11 @@ end
 Ppz                                    = zeros(turns,length(z));
 Psz                                    = zeros(turns,length(z));
 fiber                                  = zeros(1,length(z));
-Pp_cav                                 = zeros(turns,1);
 Pstokes                                = zeros(turns,1);
 output_1                               = zeros(turns,1);
 PsL_cav_1                              = zeros(turns,1); 
 PsL_cav_2                              = zeros(turns,1); 
-output_pump                            = zeros(15,1);
 output_2                               = zeros(turns,1);
-new_input_1                            = zeros(turns,1);
-stokes_lines                           = zeros(turns,stokes_lines_number);
 Pp0_vector                             = zeros(1,stokes_lines_number);
 Pp0 = Pp0*ganho_sym_2020(Pp0/2,Gmax, Psat)/2;
 Pp0in= Pp0;
