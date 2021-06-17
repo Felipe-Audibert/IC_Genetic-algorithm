@@ -43,8 +43,8 @@ for Pin=Vec_Pin
             Diff(i)                             = sum(abs(abs(Lamb_plot(426:end).') - abs(Power(426:end))));
         end
         
-        Storage_Pop(:,:,Generation)            = Pop;
-        Storage_Diff(:,Generation)             = Diff';
+        Storage_Pop(:,:,Generation,find(Vec_Pin==Pin))            = Pop;
+        Storage_Diff(:,Generation,find(Vec_Pin==Pin))             = Diff';
         
         %% Crossover %%
         Vec_Prop                            = (1./Diff).^Ctrl;
@@ -69,9 +69,9 @@ for Pin=Vec_Pin
             end
         end
         if Generation<=9
-            disp(strcat('End of 0',num2str(Generation),' Generation. Mean_Diff=  ',num2str(mean(Diff))));
+            disp(strcat('End of (0',num2str(Generation),') Generation. Mean_Diff=  ',num2str(mean(Diff))));
         else
-            disp(strcat('End of  ',num2str(Generation),' Generation. Mean_Diff=  ',num2str(mean(Diff))));
+            disp(strcat('End of (',num2str(Generation),') Generation. Mean_Diff=  ',num2str(mean(Diff))));
         end    
         if min(Diff)<0.3 || Generation>=Max_Generation
             disp(strcat('             ---------------     END OF TESTS FOR Pin=  ', num2str(Pin*1e3), 'mW     ---------------'));
