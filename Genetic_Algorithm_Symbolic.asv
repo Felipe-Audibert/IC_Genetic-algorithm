@@ -11,8 +11,7 @@ Max_Generation                              = 20;
 EDFA                                        = 280e-3;
 Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
 Popsize                                     = 20;
-Mut_Rate                                    = 0.02;
-Mut_Variation                               = 0.2;
+Mutrate                                     = 0.02;
 Pop                                         = zeros(Popsize, 2);
 New_Pop                                     = zeros(Popsize,2);
 Diff                                        = zeros(1,Popsize);
@@ -58,11 +57,12 @@ for Pin=Vec_Pin
         end
         for i=1:Popsize
             for j=1:length(Pop(1))
-                if rand()<Mut_Rate
-                    if rand()<0.5
-                        New_Pop(i,j)             = New_Pop(i,j)*(1+Mut_Variation);
-                    else
-                        New_Pop(i,j)             = New_Pop(i,j)*(1-Mut_Variation);
+                if rand()<Mutrate
+                        if rand()<0.5
+                            New_Pop(i,j)             = New_Pop(i,j)*1.2;
+                        else
+                            New_Pop(i,j)             = New_Pop(i,j)*1.2;    
+                        end
                     end
                 end
             end
