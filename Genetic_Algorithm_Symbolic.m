@@ -22,7 +22,7 @@ Vec_Sel                                     = [];
 Storage_Pop                                 = zeros(Popsize,2,Max_Generation,length(Vec_Pin));
 Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
 Ctrl                                        = 1; %Control of the valorization of the best individual
-Lim                                         = [10 35 10e-3 100e-3]; %Limits of individuals Generation
+Lim                                         = [5 50 2e-3 400e-3]; %Limits of individuals Generation
 filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
 %% Initial Pop Generation %%
@@ -70,6 +70,8 @@ for Pin=Vec_Pin
         end
         if Generation<=9
             disp(['End of Generation 0' ,num2str(Generation), '. Mean_Diff =  ',num2str(mean(Diff))]);
+            disp(['Min_Diff = ', num2str(min(Diff))]);
+            disp(['Best individual = ', num2str(Pop(find(Diff==min(Diff))),:)]);
         else
             disp(['End of Generation ' ,num2str(Generation), '. Mean_Diff =  ',num2str(mean(Diff))]);
         end    
