@@ -308,7 +308,6 @@ end
     if Save_Fig
         for i=1:length(fig)
             saveas(fig(i),strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Pin_',num2str(Pin*1e3),'mW/',num2str(tit(i))),'jpg');
-            close all
         end
     end 
 end
