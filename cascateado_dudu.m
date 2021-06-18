@@ -188,32 +188,33 @@ for comp_onda = 1:stokes_lines_number
     
 end
 
-tit(1) = "Potência na saída do laser [mW]";
-fig(1) = figure('visible',ifplot);
-plot(1:comp_onda,Pot_saida*1e3,'o')
-ylabel(tit(1));
-
-fig(2) = figure('visible',ifplot);
-plot(1:comp_onda,bombeio*1e3,'o')
-tit(2) = "Potência entrando na cavidade Brillouin [mW]";
-ylabel(tit(2));
-
-fig(3) = figure('visible',ifplot);
-plot(1:comp_onda,Pot_saida_dBm,'o')
-tit(3) = "Potência na saída do laser [dBm]";
-ylabel(tit(3));
-
-fig(4) = figure('visible',ifplot);
-plot(1:comp_onda,real(bombeio_pre_edfa)*1e3,'o')
-tit(4) = "Potência entrando no EDFA [mW]";
-ylabel(tit(4));
-
-fig(5) = figure('visible',ifplot);
-plot(1:comp_onda,real(10.*log10(ganho_EDFA)))
-tit(5) = "ganho do EDFA [dB]";
-ylabel(tit(5));
-title(strcat('Ganho do EDFA para ', num2str(EDFA*1e3), 'mW e Pin de ', num2str(Pin*1e3), 'mW'));
-
+if ifplot || Save_Fig
+    tit(1) = "Potência na saída do laser [mW]";
+    fig(1) = figure('visible',ifplot);
+    plot(1:comp_onda,Pot_saida*1e3,'o')
+    ylabel(tit(1));
+    
+    fig(2) = figure('visible',ifplot);
+    plot(1:comp_onda,bombeio*1e3,'o')
+    tit(2) = "Potência entrando na cavidade Brillouin [mW]";
+    ylabel(tit(2));
+    
+    fig(3) = figure('visible',ifplot);
+    plot(1:comp_onda,Pot_saida_dBm,'o')
+    tit(3) = "Potência na saída do laser [dBm]";
+    ylabel(tit(3));
+    
+    fig(4) = figure('visible',ifplot);
+    plot(1:comp_onda,real(bombeio_pre_edfa)*1e3,'o')
+    tit(4) = "Potência entrando no EDFA [mW]";
+    ylabel(tit(4));
+    
+    fig(5) = figure('visible',ifplot);
+    plot(1:comp_onda,real(10.*log10(ganho_EDFA)))
+    tit(5) = "ganho do EDFA [dB]";
+    ylabel(tit(5));
+    title(strcat('Ganho do EDFA para ', num2str(EDFA*1e3), 'mW e Pin de ', num2str(Pin*1e3), 'mW'));
+end
     %%%%%%% Potencias totais em mW %%%%%%%
     Pot_saida_total = sum(real(Pot_saida))*1e3;
     Pot_antes_edfa_total = sum(real(bombeio_pre_edfa))*1e3;
@@ -283,29 +284,31 @@ title(strcat('Ganho do EDFA para ', num2str(EDFA*1e3), 'mW e Pin de ', num2str(P
     end
     
     retorno = P1/max(P1);
-    fig(6) = figure('visible',ifplot);
-    %plot(Lambda,eixo_y(6,:),'r',Lambda,P1/max(P1))
-    %plot(Lambda,'r',P1/max(P1))
-    plot(Lambda,P1/max(P1),'r')
-    hold on
-    plot(Lambda,osa_simulado,'b')
-    %       axis([1565.5 1567 0 1.1]);
-    xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
-    ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
-    legend('Experimental','Analytical solution','FontSize',16,'FontWeight','bold')
-    %       axis([1565.5 1567.5 -0.02 1.1]);
-    plt = gca;
-    plt.YAxis(1).Color = 'k';
-    plt.XAxis(1).Color = 'k';
-    set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
-    set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
-    title(strcat('EDFA = ',num2str(EDFA*1e3),'mW       Pin = ', num2str(Pin*1e3), 'mW'));
-    tit(6) = "Comparison Experimental vs Analytical";
-    % erro = (1-Pot_saida_total/Pot1)*100;             % erro percentual entre valor de potência na saida "medido" e simualdo
-
+    if ifplot || Save_Fig
+        fig(6) = figure('visible',ifplot);
+        %plot(Lambda,eixo_y(6,:),'r',Lambda,P1/max(P1))
+        %plot(Lambda,'r',P1/max(P1))
+        plot(Lambda,P1/max(P1),'r')
+        hold on
+        plot(Lambda,osa_simulado,'b')
+        %       axis([1565.5 1567 0 1.1]);
+        xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
+        ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
+        legend('Experimental','Analytical solution','FontSize',16,'FontWeight','bold')
+        %       axis([1565.5 1567.5 -0.02 1.1]);
+        plt = gca;
+        plt.YAxis(1).Color = 'k';
+        plt.XAxis(1).Color = 'k';
+        set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
+        set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
+        title(strcat('EDFA = ',num2str(EDFA*1e3),'mW       Pin = ', num2str(Pin*1e3), 'mW'));
+        tit(6) = "Comparison Experimental vs Analytical";
+        % erro = (1-Pot_saida_total/Pot1)*100;             % erro percentual entre valor de potência na saida "medido" e simualdo
+    end
     if Save_Fig
         for i=1:length(fig)
             saveas(fig(i),strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Pin_',num2str(Pin*1e3),'mW/',num2str(tit(i))),'jpg');
+            close all
         end
     end 
 end
