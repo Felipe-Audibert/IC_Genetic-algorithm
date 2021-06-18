@@ -9,8 +9,7 @@ disp(['             ---------------     Começo do Algorítmo genético. HORÁRIO: '
 
 Max_Generation                              = 20;
 EDFA                                        = 280e-3;
-% Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
-Vec_Pin                                     = [0.43]*1e-3;
+Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
 Popsize                                     = 20;
 Mut_Rate                                    = 0.02;
 Mut_Variation                               = 0.2;
@@ -22,7 +21,7 @@ Vec_Sel                                     = [];
 Storage_Pop                                 = zeros(Popsize,2,Max_Generation,length(Vec_Pin));
 Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
 Ctrl                                        = 1; %Control of the valorization of the best individual
-Lim                                         = [5 50 2e-3 400e-3]; %Limits of individuals Generation
+Lim                                         = [11 50 0.1 100]; %Limits of individuals Generation
 filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
 %% Initial Pop Generation %%
@@ -40,7 +39,7 @@ for Pin=Vec_Pin
         
         for i=1:Popsize
             [Lambda, Power, Lamb_plot]          = cascateado_dudu(EDFA, Pin, Pop(i,1), Pop(i,2), 0, 0);
-            Diff(i)                             = sum(abs(abs(Lamb_plot(426:end).') - abs(Power(426:end))));
+            Diff(i)                             = sum(abs(abs(Lamb_plot.') - abs(Power)));
         end
         
         Storage_Pop(:,:,Generation,find(Vec_Pin==Pin))            = Pop;
@@ -70,8 +69,6 @@ for Pin=Vec_Pin
         end
         if Generation<=9
             disp(['End of Generation 0' ,num2str(Generation), '. Mean_Diff =  ',num2str(mean(Diff))]);
-            disp(['Min_Diff = ', num2str(min(Diff))]);
-            disp(['Best individual = ', num2str(Pop(find(Diff==min(Diff))),:)]);
         else
             disp(['End of Generation ' ,num2str(Generation), '. Mean_Diff =  ',num2str(mean(Diff))]);
         end    

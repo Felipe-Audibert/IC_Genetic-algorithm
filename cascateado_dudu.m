@@ -212,7 +212,7 @@ fig(5) = figure('visible',ifplot);
 plot(1:comp_onda,real(10.*log10(ganho_EDFA)))
 tit(5) = "ganho do EDFA [dB]";
 ylabel(tit(5));
-title(strcat('Ganho do EDFA para ', EDFA*1e3, 'mW e Pin de ', Pin*1e3, 'mW'));
+title(strcat('Ganho do EDFA para ', num2str(EDFA*1e3), 'mW e Pin de ', num2str(Pin*1e3), 'mW'));
 
     %%%%%%% Potencias totais em mW %%%%%%%
     Pot_saida_total = sum(real(Pot_saida))*1e3;
