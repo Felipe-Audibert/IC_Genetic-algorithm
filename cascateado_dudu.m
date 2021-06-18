@@ -12,7 +12,7 @@
 % Moreover, the laser cavity is constructed and the pump power is scanned 
 % to compare the laser output with the NZDSF fiber experimental data.
 
-function [Lambda, retorno, osa_simulado] = cascateado_dudu(EDFA, Pin, Gmax, Psat, ifplot)  
+function [Lambda, retorno, osa_simulado] = cascateado_dudu(EDFA, Pin, Gmax, Psat, ifplot, Save_Fig)  
 
 %% Finding Workspace number %%
 Vec_EDFA                                = [0.12 0.15 0.17 0.2 0.22 0.25 0.28];
@@ -184,27 +184,36 @@ for comp_onda = 1:stokes_lines_number
     pot_atual_bom = real(sum(bombeio)+Pp0in);
     Pp0 = PsL_cav_2(cav_pos-1,1)*ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + pot_atual_bom/2,Gmax, Psat)/2;
     bombeio_pre_edfa(comp_onda) = Pp0/ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,Gmax, Psat)+pot_atual_bom/2;
-    ganho_sym_2020_EDFA(comp_onda) = ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,Gmax, Psat);
+    ganho_EDFA(comp_onda) = ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,Gmax, Psat);
     
 end
-if ifplot
-    
-    figure(1)
-    plot(1:comp_onda,Pot_saida*1e3,'o')
-    ylabel('Potência na saída do laser [mW]')
-    figure(2)
-    plot(1:comp_onda,bombeio*1e3,'o')
-    ylabel('Potência entrando na cavidade Brillouin [mW]')
-    figure(3)
-    plot(1:comp_onda,Pot_saida_dBm,'o')
-    ylabel('Potência na saída do laser [dBm]')
-    figure(5)
-    plot(1:comp_onda,real(bombeio_pre_edfa)*1e3,'o')
-    ylabel('Potência entrando no EDFA [mW]')
-    figure(9)
-    plot(1:comp_onda,real(10.*log10(ganho_sym_2020_EDFA)),'o')
-    ylabel('ganho_sym_2020 do EDFA [dB]')
-end
+
+tit(1) = "Potência na saída do laser [mW]";
+fig(1) = figure('visible',ifplot);
+plot(1:comp_onda,Pot_saida*1e3,'o')
+ylabel(tit(1));
+
+fig(2) = figure('visible',ifplot);
+plot(1:comp_onda,bombeio*1e3,'o')
+tit(2) = "Potência entrando na cavidade Brillouin [mW]";
+ylabel(tit(2));
+
+fig(3) = figure('visible',ifplot);
+plot(1:comp_onda,Pot_saida_dBm,'o')
+tit(3) = "Potência na saída do laser [dBm]";
+ylabel(tit(3));
+
+fig(4) = figure('visible',ifplot);
+plot(1:comp_onda,real(bombeio_pre_edfa)*1e3,'o')
+tit(4) = "Potência entrando no EDFA [mW]";
+ylabel(tit(4));
+
+fig(5) = figure('visible',ifplot);
+plot(1:comp_onda,real(10.*log10(ganho_EDFA)))
+tit(5) = "ganho do EDFA [dB]";
+ylabel(tit(5));
+title(strcat('Ganho do EDFA para ', EDFA*1e3, 'mW e Pin de ', Pin*1e3, 'mW'));
+
     %%%%%%% Potencias totais em mW %%%%%%%
     Pot_saida_total = sum(real(Pot_saida))*1e3;
     Pot_antes_edfa_total = sum(real(bombeio_pre_edfa))*1e3;
@@ -274,23 +283,29 @@ end
     end
     
     retorno = P1/max(P1);
-    if ifplot
-        figure(6)
-        %plot(Lambda,eixo_y(6,:),'r',Lambda,P1/max(P1))
-        %plot(Lambda,'r',P1/max(P1))
-        plot(Lambda(426:end),P1(426:end)/max(P1(426:end)),'r')
-        hold on
-        plot(Lambda(426:end),osa_simulado(426:end),'b')
-%       axis([1565.5 1567 0 1.1]);
-        xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
-        ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
-        legend('Experimental','Analytical solution','FontSize',16,'FontWeight','bold')
-%       axis([1565.5 1567.5 -0.02 1.1]);
-        plt = gca;
-        plt.YAxis(1).Color = 'k';
-        plt.XAxis(1).Color = 'k';
-        set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
-        set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
-    end
+    fig(6) = figure('visible',ifplot);
+    %plot(Lambda,eixo_y(6,:),'r',Lambda,P1/max(P1))
+    %plot(Lambda,'r',P1/max(P1))
+    plot(Lambda,P1/max(P1),'r')
+    hold on
+    plot(Lambda,osa_simulado,'b')
+    %       axis([1565.5 1567 0 1.1]);
+    xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
+    ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
+    legend('Experimental','Analytical solution','FontSize',16,'FontWeight','bold')
+    %       axis([1565.5 1567.5 -0.02 1.1]);
+    plt = gca;
+    plt.YAxis(1).Color = 'k';
+    plt.XAxis(1).Color = 'k';
+    set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
+    set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
+    title(strcat('EDFA = ',num2str(EDFA*1e3),'mW       Pin = ', num2str(Pin*1e3), 'mW'));
+    tit(6) = "Comparison Experimental vs Analytical";
     % erro = (1-Pot_saida_total/Pot1)*100;             % erro percentual entre valor de potência na saida "medido" e simualdo
+
+    if Save_Fig
+        for i=1:length(fig)
+            saveas(fig(i),strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Pin_',num2str(Pin*1e3),'mW/',num2str(tit(i))),'jpg');
+        end
+    end 
 end

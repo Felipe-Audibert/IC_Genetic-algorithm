@@ -9,7 +9,8 @@ disp(['             ---------------     Começo do Algorítmo genético. HORÁRIO: '
 
 Max_Generation                              = 20;
 EDFA                                        = 280e-3;
-Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
+% Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
+Vec_Pin                                     = [0.43]*1e-3;
 Popsize                                     = 20;
 Mut_Rate                                    = 0.02;
 Mut_Variation                               = 0.2;
@@ -21,7 +22,7 @@ Vec_Sel                                     = [];
 Storage_Pop                                 = zeros(Popsize,2,Max_Generation,length(Vec_Pin));
 Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
 Ctrl                                        = 1; %Control of the valorization of the best individual
-Lim                                         = [13 30 1 1000]; %Limits of individuals Generation
+Lim                                         = [10 35 10e-3 100e-3]; %Limits of individuals Generation
 filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
 %% Initial Pop Generation %%
@@ -30,15 +31,15 @@ for Pin=Vec_Pin
     for i=1:Popsize
         Pop(i,:)                                = [Lim(1)+rand()*(Lim(2)-Lim(1)) Lim(3)+rand()*(Lim(4)-Lim(3))];
     end
-    while not(isempty(find(Pop==[20.6795669933805,8.81247327576556]))) %O código não funciona para estes valores
-        Pop(i,:)                                = [Lim(1)+rand()*(Lim(2)-Lim(1)) Lim(3)+rand()*(Lim(4)-Lim(3))];
-    end
+%     while not(isempty(find(Pop==[20.6795669933805,8.81247327576556]))) %O código não funciona para estes valores
+%         Pop(i,:)                                = [Lim(1)+rand()*(Lim(2)-Lim(1)) Lim(3)+rand()*(Lim(4)-Lim(3))];
+%     end
     %% Testing the Population %%
     
     while 1
         
         for i=1:Popsize
-            [Lambda, Power, Lamb_plot]          = cascateado_dudu(EDFA, Pin, Pop(i,1), Pop(i,2), 0);
+            [Lambda, Power, Lamb_plot]          = cascateado_dudu(EDFA, Pin, Pop(i,1), Pop(i,2), 0, 0);
             Diff(i)                             = sum(abs(abs(Lamb_plot(426:end).') - abs(Power(426:end))));
         end
         
