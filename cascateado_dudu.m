@@ -177,7 +177,7 @@ for comp_onda = 1:stokes_lines_number
         cav_pos                    = cav_pos + 1;
         pos                        = 1;
     end
-    Pot_saida(comp_onda) =  output_2(cav_pos-1,1);
+    Pot_saida(comp_onda) =  output_2(cav_pos-1,1); 
     Pot_saida_dBm(comp_onda) = 10*log10((Pot_saida(comp_onda)+1e-8)./1e-3);
     Pot_saida_dB(comp_onda) = 10*log10(Pot_saida(comp_onda));
     bombeio(comp_onda) = Pp0;
