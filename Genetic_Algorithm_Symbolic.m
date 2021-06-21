@@ -9,6 +9,7 @@ disp(['             ---------------     Começo do Algorítmo genético. HORÁRIO: '
 
 Max_Generation                              = 20;
 EDFA                                        = 150e-3;
+EDFA                                        = 250e-3;
 Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
 Popsize                                     = 20;
 Mut_Rate                                    = 0.02;
