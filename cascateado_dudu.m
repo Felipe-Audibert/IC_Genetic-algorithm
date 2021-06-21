@@ -247,9 +247,9 @@ end
 %         xlabel('Comprimentos de onda gerados')
 %     end
     %%%%% Calculo de R^2 do ajuste da curva linear %%%%%%%%
-    SSr = sum(abs(L2-L1));
-    SSt = sum(abs(L1-mean(L1)));
-    R2 = 1 - SSr/SSt;
+%     SSr = sum(abs(L2-L1));
+%     SSt = sum(abs(L1-mean(L1)));
+%     R2 = 1 - SSr/SSt;
     
     %%%%% Calculos de potencias a partir dos dados experimentais do OSA %%%%%
     
