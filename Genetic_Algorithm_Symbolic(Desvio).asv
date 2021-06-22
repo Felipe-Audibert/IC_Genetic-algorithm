@@ -53,17 +53,7 @@ for Pin=Vec_Pin
         Storage_Pop(:,:,Generation,find(Vec_Pin==Pin))            = Pop;
         Storage_Diff(:,Generation,find(Vec_Pin==Pin))             = Diff';
         
-        %% Crossover %%
-        if Generation>=2
-           if  (Mean(Generation)-Mean(Generation-1))<2 & (Std(Generation)-Std(Generation-1))<4
-               Ctrl                             = Ctrl_Std;
-               Mut_variation                    = Mut_Variation_Std;
-               Mut_Rate                         = Mute_Rate_Std;
-           else
-               [Ctrl Mut_Rate Mut_Variation]    = Save_Variables;
-           end
-        end
-        
+        %% Crossover %%        
         Vec_Prop                            = (1./Diff).^Ctrl;
         
         for i=1:Popsize
@@ -78,9 +68,9 @@ for Pin=Vec_Pin
             for j=1:length(Pop(1))
                 if rand()<Mut_Rate
                     if rand()<0.5
-                        New_Pop(i,j)             = New_Pop(i,j)*(1+Mut_Variation*rand());
+                        New_Pop(i,j)             = New_Pop(i,j)*(1+Mut_Variation);
                     else
-                        New_Pop(i,j)             = New_Pop(i,j)*(1-Mut_Variation*rand());
+                        New_Pop(i,j)             = New_Pop(i,j)*(1-Mut_Variation);
                     end
                 end
             end

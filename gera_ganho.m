@@ -1,4 +1,4 @@
-function[] = gera_ganho(Gmax,Psat,Legend)
+function[] = gera_ganho(EDFA,Gmax,Psat,Legend)
 close all
 
 x = 1e-7:1e-4:1e-3;
@@ -6,6 +6,7 @@ xdBm = 10*log10(x*1e3);
 figure
 yaxis('Gain(dB)')
 xaxis('Power(dBm)')
+title(strcat('EDFA = ', num2str(EDFA)));
 hold on
 for i = length(Gmax)
     for j = x
