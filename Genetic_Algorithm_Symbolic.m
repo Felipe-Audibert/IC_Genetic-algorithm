@@ -21,7 +21,7 @@ Vec_Sel                                     = [];
 Storage_Pop                                 = zeros(Popsize,2,Max_Generation,length(Vec_Pin));
 Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
 Ctrl                                        = 1; %Control of the valorization of the best individual
-Lim                                         = [11 50 0.1 100]; %Limits of individuals Generation
+Lim                                         = [11 20 0.9e-3 1.1e-3]; %Limits of individuals Generation
 filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
 %% Initial Pop Generation %%
