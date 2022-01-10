@@ -12,10 +12,10 @@ Popsize                                     = 50;
 Mut_Rate                                    = 0.05;
 Diff                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
-Storage_Pop                                 = zeros(Popsize,2,Max_Generation,length(Vec_Pin));
-Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
 Ctrl                                        = 1;
 Lim                                         = [10 30 0.2 2 0.15 0.25 0.15 0.25];
+Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation,length(Vec_Pin));
+Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
 Filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
 for Pin=Vec_Pin
