@@ -1,47 +1,35 @@
-function [Lambda, exp_teste_r, simu_teste_r] = cascateado_teste(varargin)  
-if      nargin==2
+function [exp_teste_r, simu_teste_r] = cascateado_teste(varargin)  
+if      nargin==1
    EDFA = 0.28;
    Pin = 0.43e-3;
-   Gmax = varargin{1};
-   Psat = varargin{2};
+   Pop = varargin{1};
    ifplot = 1;
    savefig = 0;
    coup_1 = 0.2;
    coup_2 = 0.19;
    
-elseif  nargin==4
+elseif  nargin==3
    EDFA = varargin{1};
    Pin = varargin{2};
-   Gmax = varargin{3};
-   Psat = varargin{4};
-   coup_1 = 0.2;
-   coup_2 = 0.19;
+   Pop = varargin{3};
    ifplot = 1;
    savefig = 0;
    
-elseif  nargin==6
+elseif  nargin==5
    EDFA = varargin{1};
    Pin = varargin{2};
-   Gmax = varargin{3};
-   Psat = varargin{4};
-   coup_1 = 0.2;
-   coup_2 = 0.19;
-   ifplot = varargin{5};
-   savefig = varargin{6};
-
-elseif  nargin==8
-   EDFA = varargin{1};
-   Pin = varargin{2};
-   Gmax = varargin{3};
-   Psat = varargin{4};
-   coup_1 = varargin{5};
-   coup_2 = varargin{6};
-   ifplot = varargin{7};
-   savefig = varargin{8};
+   Pop = varargin{3};
+   ifplot = varargin{4};
+   savefig = varargin{5};
    
 else
     error('Wrong number of input variables');
 end
+
+if length(Pop)>=2
+    Gmax = Pop(1);
+    Psat = Pop(2);
+    if length(Pop)
 
 %% Finding Workspace number %%
 Vec_EDFA                                = [0.12 0.15 0.17 0.2 0.22 0.25 0.28];

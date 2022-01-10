@@ -1,48 +1,43 @@
-function [Lambda, exp_teste_r, simu_teste_r] = cascateado_teste(varargin)  
-if      nargin==2
+function [exp_teste_r, simu_teste_r] = cascateado(varargin)  
+if      nargin==1
    EDFA = 0.28;
    Pin = 0.43e-3;
-   Gmax = varargin{1};
-   Psat = varargin{2};
-   ifplot = 1;
-   savefig = 0;
-   coup_1 = 0.2;
-   coup_2 = 0.19;
-   
-elseif  nargin==4
-   EDFA = varargin{1};
-   Pin = varargin{2};
-   Gmax = varargin{3};
-   Psat = varargin{4};
-   coup_1 = 0.2;
-   coup_2 = 0.19;
+   Pop = varargin{1};
    ifplot = 1;
    savefig = 0;
    
-elseif  nargin==6
+elseif  nargin==3
    EDFA = varargin{1};
    Pin = varargin{2};
-   Gmax = varargin{3};
-   Psat = varargin{4};
-   coup_1 = 0.2;
-   coup_2 = 0.19;
-   ifplot = varargin{5};
-   savefig = varargin{6};
-
-elseif  nargin==8
+   Pop = varargin{3};
+   ifplot = 1;
+   savefig = 0;
+   
+elseif  nargin==5
    EDFA = varargin{1};
    Pin = varargin{2};
-   Gmax = varargin{3};
-   Psat = varargin{4};
-   coup_1 = varargin{5};
-   coup_2 = varargin{6};
-   ifplot = varargin{7};
-   savefig = varargin{8};
+   Pop = varargin{3};
+   ifplot = varargin{4};
+   savefig = varargin{5};
    
 else
     error('Wrong number of input variables');
 end
 
+if length(Pop)==2
+    Gmax = Pop(1);
+    Psat = Pop(2);
+    Coup_1 = 0.2;
+    Coup_2 = 0.19;
+elseif length(Pop)==4
+    Gmax = Pop(1);
+    Psat = Pop(2);
+    Coup_1 = Pop(3);
+    Coup_2 = Pop(4);
+else
+    error('Wrong Pop vector length');
+end
+    
 %% Finding Workspace number %%
 Vec_EDFA                                = [0.12 0.15 0.17 0.2 0.22 0.25 0.28];
 Vec_Pin                                 = [1 0.43 0.68 4.01 14].*1e-3;
@@ -92,10 +87,10 @@ pump_pos                               = 1;                                     
 stokes_pos                             = 1;                                      % multiwavelength stokes lines marker
 
 %% Couplers:
-coupler_output_1                       = coup_1;                                    % output coupling percentage of the first cavity  
-coupler_cavity_1                       = 1-coup_1;                                  % cavity coupling percentage of the first cavity
-coupler_output_2                       = coup_2;                                    % output coupling percentage of the second cavity  
-coupler_cavity_2                       = 1-coup_2;                                  % cavity coupling percentage of the second cavity
+coupler_output_1                       = Coup_1;                                    % output coupling percentage of the first cavity  
+coupler_cavity_1                       = 1-Coup_1;                                  % cavity coupling percentage of the first cavity
+coupler_output_2                       = Coup_2;                                    % output coupling percentage of the second cavity  
+coupler_cavity_2                       = 1-Coup_2;                                  % cavity coupling percentage of the second cavity
 
 %% Counters:
 count_weak                             = 0;
@@ -285,12 +280,11 @@ end
         testando(i) = trapz(Lambda(x-15:x+15),Power(x-15:x+15));
     end
     
-    exp_teste = 10.^(pks480./10);           
-    simu_teste = real(Pot_saida)*1e3;
+    exp_teste = 10.^(pks480./10)/10;            %Power em mW
+    simu_teste = real(Pot_saida)*1e3;           %
     exp_teste_r = exp_teste(2:end);
     simu_teste_r = simu_teste(2:end);
     retorno = P1/max(P1);
-    plot(pks480)
     
     if ifplot || savefig
         fig(6) = figure('visible',ifplot);
