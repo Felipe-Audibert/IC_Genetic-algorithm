@@ -54,17 +54,14 @@ for Pin=Vec_Pin
 end
 save(Filepath,'Storage_Pop','Storage_Diff');
 
-[lin col] = find(Storage_Diff==min(min(Storage_Diff)));
-Individual = Storage_Pop(lin, :, col, end);
-cascateado(EDFA, Pin, Individual);
+[lin col] = find(Storage_Diff==min(min(Storage_Diff)))
+min(min(Storage_Diff))
 
 %% EDFA = 220mW 
 % Pin = 0,43mW %
 % 14.4762, 1.1661; 15.2761, 1.3089;
 % 10.0272, 0.2040
 % 15.6578, 1.9774
-
-% 15.1974, 1.6889, 0.2329, 0.1850;
 
 
 %Pin = 0,68mW
