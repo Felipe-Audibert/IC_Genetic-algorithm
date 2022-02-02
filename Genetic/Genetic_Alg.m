@@ -6,8 +6,8 @@ disp(['             ---------------     Começo do Algorítmo genético. HORÁRI
 
 %% Variables definition %%
 Max_Generation                              = 15;
-EDFA                                        = 220e-3;
-Vec_Pin                                     = [0.43]*1e-3;
+EDFA                                        = 120e-3;
+Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
 Popsize                                     = 50;
 Mut_Rate                                    = 0.05;
 Diff                                        = zeros(1,Popsize);
@@ -54,15 +54,23 @@ for Pin=Vec_Pin
 end
 save(Filepath,'Storage_Pop','Storage_Diff');
 
-[lin col] = find(Storage_Diff==min(min(Storage_Diff)))
-min(min(Storage_Diff))
-
+Individual = zeros(length(Vec_Pin),length(Pop(1,:)));
+for i=1:length(Vec_Pin)
+    [lin, col] = find(Storage_Diff(:,:,i)==min(min(Storage_Diff(:,:,i))));
+    Individual(i,:) = Storage_Pop(lin(1),:,col(2),i)
+end
+    
 %% EDFA = 220mW 
 % Pin = 0,43mW %
-% 14.4762, 1.1661; 15.2761, 1.3089;
+% 14.4762, 1.1661
+%15.2761, 1.3089;
 % 10.0272, 0.2040
 % 15.6578, 1.9774
+% 15.1974   1.6889    0.2329    0.1850;
 
-
-%Pin = 0,68mW
+% Pin = 0,68mW %
 % 13.7836, 1.3924
+% 14.6948    1.8295    0.2282    0.2058
+
+% Pin = 1mW %
+% 15.1963    1.9272    0.2203    0.2475

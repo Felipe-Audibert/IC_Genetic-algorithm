@@ -1,6 +1,6 @@
 function [output] = ganho_sym_2020(Pin, Gmax, Psat)
 % Pin em W
-% Gmax em W
+% Gmax
 % Psat em W
 
 warning off all

@@ -1,50 +1,47 @@
-% ----------------------------------------------------------------------- %
-% ---- Analytical solution for multiwavelength brillouin fiber lasers --- %
-% -------------------------- Date: 30/03/2020 --------------------------- %
-% ---------------------- Author: Luís C. B. Silva ----------------------- %
-% ----------- Implementation of the code on the Matlab R2019a ----------- %
-% ------------------------------------------------------------------------%
-
-%% Notes:
-% This code implements the analytical solution presented in the paper: 
-%''Analytical approach to calculate the gain of Brillouin fiber amplifiers 
-% in the regime of pump depletion (https://doi.org/10.1364/AO.58.007628)"
-% Moreover, the laser cavity is constructed and the pump power is scanned 
-% to compare the laser output with the NZDSF fiber experimental data.
-
-function [Lambda, retorno, osa_simulado] = cascateado_dudu(varargin)  
-
-if      nargin==2
+function [exp_r, simu_r] = cascateado(varargin)  
+if      nargin==1
    EDFA = 0.28;
    Pin = 0.43e-3;
-   Gmax = varargin{1};
-   Psat = varargin{2};
+   Pop = varargin{1};
    ifplot = 1;
    savefig = 0;
    
-elseif  nargin==4
+elseif  nargin==3
    EDFA = varargin{1};
    Pin = varargin{2};
-   Gmax = varargin{3};
-   Psat = varargin{4};
+   Pop = varargin{3};
    ifplot = 1;
    savefig = 0;
-
-elseif  nargin==6
+   
+elseif  nargin==5
    EDFA = varargin{1};
    Pin = varargin{2};
-   Gmax = varargin{3};
-   Psat = varargin{4};
-   ifplot = varargin{5};
-   savefig = varargin{6};
+   Pop = varargin{3};
+   ifplot = varargin{4};
+   savefig = varargin{5};
    
 else
     error('Wrong number of input variables');
 end
+
+if length(Pop)==2
+    Gmax = Pop(1);
+    Psat = Pop(2);
+    Coup_1 = 0.2;
+    Coup_2 = 0.19;
+elseif length(Pop)==4
+    Gmax = Pop(1);
+    Psat = Pop(2);
+    Coup_1 = Pop(3);
+    Coup_2 = Pop(4);
+else
+    error('Wrong Pop vector length');
+end
+    
 %% Finding Workspace number %%
 Vec_EDFA                                = [0.12 0.15 0.17 0.2 0.22 0.25 0.28];
 Vec_Pin                                 = [1 0.43 0.68 4.01 14].*1e-3;
-Workspaces                              = [1 2 4 3 5 6 7; 9 10 11 12 13 14 15; 16 17 18 19 20 21 22; 25 26 27 28 29 30 31; 32 33 34 35 36 37 38];
+Workspaces                              = [1:7; 9:15; 16:22; 25:31; 32:38];
 
 lin_EDFA                                = find(Vec_EDFA==EDFA);
 col_Pin                                 = find(Vec_Pin==Pin);
@@ -57,24 +54,19 @@ else
 end
 
 Num_Workspace                           = Workspaces(col_Pin,lin_EDFA);
+Workspace_Name                          = sprintf('Workspace_%.3d',Num_Workspace);
 
-if Num_Workspace<=9
-    Workspace_Name                      = strcat('Workspace_00', num2str(Num_Workspace));
-elseif Num_Workspace<=99
-    Workspace_Name                      = strcat('Workspace_0', num2str(Num_Workspace));
-else
-    error('Workspace number is invalid');
-end
+    file_path = strcat('../1565nm_BP_',num2str(Pin*1e3),'mW', '/', Workspace_Name, '.mat');
 
-    file_path = strcat('1565nm_BP_',num2str(Pin*1e3),'mW', '/', Workspace_Name, '.mat');
-
+pot = [];
+ 
 %% Load new data (Dudu)
 load(file_path)
 
 Lambda = eval(['Lambda' num2str(Num_Workspace)]);
 Power = eval(['Power' num2str(Num_Workspace)]);
 %% Variables definition: 
-PsL                                    = 1*10^(-8);                              % wave Stokes inital value
+PsL                                    = 1e-8;                                   % wave Stokes inital value
 y                                      = 0.2261;                                 % peak SBS efficiency (called gamma)
 Alfa                                   = 0.23026*0.201e-3;                       % optical loss coefficient of the fiber 
 L                                      = 25e3;                                   % fiber length
@@ -95,10 +87,10 @@ pump_pos                               = 1;                                     
 stokes_pos                             = 1;                                      % multiwavelength stokes lines marker
 
 %% Couplers:
-coupler_output_1                       = 0.2;                                    % output coupling percentage of the first cavity  
-coupler_cavity_1                       = 0.8;                                    % cavity coupling percentage of the first cavity
-coupler_output_2                       = 0.19;                                   % output coupling percentage of the second cavity  
-coupler_cavity_2                       = 0.81;                                   % cavity coupling percentage of the second cavity
+coupler_output_1                       = Coup_1;                                    % output coupling percentage of the first cavity  
+coupler_cavity_1                       = 1-Coup_1;                                  % cavity coupling percentage of the first cavity
+coupler_output_2                       = Coup_2;                                    % output coupling percentage of the second cavity  
+coupler_cavity_2                       = 1-Coup_2;                                  % cavity coupling percentage of the second cavity
 
 %% Counters:
 count_weak                             = 0;
@@ -127,8 +119,8 @@ Pp0in= Pp0;
 fim = 0;
 
 for comp_onda = 1:stokes_lines_number
-    if comp_onda > 1
-        y = 0.2261/2;
+    if comp_onda == 2
+        y = y/2;
     end
     %% First cavity:
     for cavity                     = 1:turns
@@ -204,6 +196,12 @@ for comp_onda = 1:stokes_lines_number
         cav_pos                    = cav_pos + 1;
         pos                        = 1;
     end
+%     if comp_onda==1
+%         output_2(cav_pos-1,1) = output_2(cav_pos-1,1)*3;
+%     end
+%     if comp_onda==2
+%         output_2(cav_pos-1,1) = output_2(cav_pos-1,1)/1.28;
+%     end
     Pot_saida(comp_onda) =  output_2(cav_pos-1,1); 
     Pot_saida_dBm(comp_onda) = 10*log10((Pot_saida(comp_onda)+1e-8)./1e-3);
     Pot_saida_dB(comp_onda) = 10*log10(Pot_saida(comp_onda));
@@ -211,29 +209,28 @@ for comp_onda = 1:stokes_lines_number
     pot_atual_bom = real(sum(bombeio)+Pp0in);
     Pp0 = PsL_cav_2(cav_pos-1,1)*ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + pot_atual_bom/2,Gmax, Psat)/2;
     bombeio_pre_edfa(comp_onda) = Pp0/ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,Gmax, Psat)+pot_atual_bom/2;
-    ganho_EDFA(comp_onda) = ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,Gmax, Psat);
-    
+    ganho_EDFA(comp_onda) = ganho_sym_2020(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,Gmax, Psat);    
 end
 
 if ifplot || savefig
-    tit(1) = "Potência na saída do laser [mW]";
+    tit(1) = "PotÃªncia na saÃ­da do laser [mW]";
     fig(1) = figure('visible',ifplot);
     plot(1:comp_onda,Pot_saida*1e3,'o')
     ylabel(tit(1));
     
     fig(2) = figure('visible',ifplot);
     plot(1:comp_onda,bombeio*1e3,'o')
-    tit(2) = "Potência entrando na cavidade Brillouin [mW]";
+    tit(2) = "PotÃªncia entrando na cavidade Brillouin [mW]";
     ylabel(tit(2));
     
     fig(3) = figure('visible',ifplot);
     plot(1:comp_onda,Pot_saida_dBm,'o')
-    tit(3) = "Potência na saída do laser [dBm]";
+    tit(3) = "PotÃªncia na saÃ­da do laser [dBm]";
     ylabel(tit(3));
     
     fig(4) = figure('visible',ifplot);
     plot(1:comp_onda,real(bombeio_pre_edfa)*1e3,'o')
-    tit(4) = "Potência entrando no EDFA [mW]";
+    tit(4) = "PotÃªncia entrando no EDFA [mW]";
     ylabel(tit(4));
     
     fig(5) = figure('visible',ifplot);
@@ -248,13 +245,7 @@ end
     Pot_depois_edfa_total = sum(real(bombeio))*1e3;
     
     %% Find peaks (envelope) in experimental data:
-    %[pks480,locs480]                       = findpeaks(real(Power(405:end-270)),Lambda(405:end-270),'MinPeakDistance',(Lambda(2)-Lambda(1))*19);
-    %[pks680,locs680]                       = findpeaks(real(Power3(405:end-160)),Lambda3(405:end-160),'MinPeakDistance',(Lambda3(2)-Lambda3(1))*20);
-    %[pks880,locs880]                       = findpeaks(real(Power4(405:end-160)),Lambda4(405:end-160),'MinPeakDistance',(Lambda4(2)-Lambda4(1))*20);
-    %[pks980,locs980]                       = findpeaks(real(Power5(405:end-160)),Lambda5(405:end-160),'MinPeakDistance',(Lambda5(2)-Lambda5(1))*20);
-    % [pks1080,locs1080]                    = findpeaks(real(Power6(405:end-150)),Lambda6(405:end-150),'MinPeakDistance',(Lambda6(2)-Lambda6(1))*20);
-    %[pks1080,locs1080]                     = findpeaks(real(Power6(405:end-270)),Lambda6(405:end-270),'MinPeakDistance',(Lambda6(2)-Lambda6(1))*20);
-    Power= 10*log10((Power)/1e-3);
+    Power= 10*log10((Power)/1e-3);      %Convert Power to dBm
     [pks480,locs480]                        = findpeaks(real(Power(405:end-200)),Lambda(405:end-200),'MinPeakDistance',(Lambda(2)-Lambda(1))*19);
     
     L1 = 10.^(real(pks480-max(pks480))/10);
@@ -262,46 +253,18 @@ end
     aux = aux.';
     L2 = 10.^(aux/10);
     
-%     if ifplot
-%         figure(4)
-%         subplot(1,2,2)
-%         plot(L1,'-o')
-%         hold on
-%         subplot(1,2,2)
-%         plot(1:comp_onda,L2,'-xr')
-%         hold off
-%         ylabel('Intensity [a. u. linear]')
-%         xlabel('Comprimentos de onda gerados')
-%     end
-    %%%%% Calculo de R^2 do ajuste da curva linear %%%%%%%%
-%     SSr = sum(abs(L2-L1));
-%     SSt = sum(abs(L1-mean(L1)));
-%     R2 = 1 - SSr/SSt;
-    
-    %%%%% Calculos de potencias a partir dos dados experimentais do OSA %%%%%
-    
     P1 = 10.^(real(Power)/10);
-    P2 = 10.^(real(Power)/10);
+    %P2 = 10.^(real(Pot_saida_dBm)/10);
     Pot1 = trapz(Lambda,P1);
-    Pot2 = trapz(Lambda,P2);
-    
-    % %%%%% Integrador manual %%%%%%
-    % Está comentado aqui pois está dando os mesmos resultados da função trapz
-    % area_tot = 0;
-    % for a = 1:length(Lambda)-1
-    %     area = (Lambda(a+1)-Lambda(a))*(P1(a)+(P1(a+1)-P1(a))/2);
-    %     area_tot = area_tot+area;
-    % end
-    % %%%%%%%%%%%% Graficos reconstruídos com sech^2 %%%%%%%%%%
+    %Pot2 = trapz(Lambda,P2);
+   
     num = length(Lambda);
     delta_lambda = Lambda(num)-Lambda(1);
     eixo_x = linspace(-37*pi,37*pi,num);
     osa_simulado = zeros(1,num);
-     ajuste = (mean(Lambda)-locs480(1))*74*pi/delta_lambda;
-     eixo_y = sech(eixo_x + ajuste).^2;
-     eixo_y = eixo_y*max(P1);
-%      figure(8)
-%      plot(Lambda,eixo_y,'r',Lambda,P1)
+    ajuste = (mean(Lambda)-locs480(1))*74*pi/delta_lambda;
+    eixo_y = sech(eixo_x + ajuste).^2;
+    eixo_y = eixo_y*max(P1);
     
     for tt=1:stokes_lines_number
         ajuste = (mean(Lambda)-locs480(tt))*74*pi/delta_lambda;
@@ -310,19 +273,30 @@ end
         osa_simulado = eixo_y(tt,:) + osa_simulado;
     end
     
-    retorno = P1/max(P1);
+    pot = locs480-10:locs480+10;
+    
+    for i=[1:length(locs480)]
+        x = find(Lambda==locs480(i));
+        testando(i) = trapz(Lambda(x-15:x+15),Power(x-15:x+15));
+    end
+    
+    experimental = 10.^(pks480./10)/10;            %Power em mW
+    simu = real(Pot_saida)*1e3;           %
+    exp_r = experimental(2:end);
+    simu_r = simu(2:end);
+    
+    exp_norm = P1/max(P1);
+
+    
     if ifplot || savefig
         fig(6) = figure('visible',ifplot);
-        %plot(Lambda,eixo_y(6,:),'r',Lambda,P1/max(P1))
-        %plot(Lambda,'r',P1/max(P1))
-        plot(Lambda,P1,'r')
+        plot(Lambda,exp_norm,'r', 'LineWidth', 2)
         hold on
-        plot(Lambda,osa_simulado*max(P1),'b')
-        %       axis([1565.5 1567 0 1.1]);
+        plot(Lambda,osa_simulado,'b', 'LineWidth', 2)
         xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
         ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
         legend('Experimental','Analytical solution','FontSize',16,'FontWeight','bold')
-        %       axis([1565.5 1567.5 -0.02 1.1]);
+        axis([1565.5 1567.5 0 1.1])
         plt = gca;
         plt.YAxis(1).Color = 'k';
         plt.XAxis(1).Color = 'k';
@@ -330,11 +304,25 @@ end
         set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
         title(strcat('EDFA = ',num2str(EDFA*1e3),'mW       Pin = ', num2str(Pin*1e3), 'mW'));
         tit(6) = "Comparison Experimental vs Analytical";
-        % erro = (1-Pot_saida_total/Pot1)*100;             % erro percentual entre valor de potência na saida "medido" e simualdo
+        
+        fig(7) = figure('visible',ifplot);
+        plot(experimental,'r-o')
+        hold on
+        plot(simu,'b-o')
+        xlabel('Stokes Line','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
+        ylabel('Peaks Power (mW)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
+        legend('Experimental','Analytical solution','FontSize',16,'FontWeight','bold')
+        plt = gca;
+        plt.YAxis(1).Color = 'k';
+        plt.XAxis(1).Color = 'k';
+        set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
+        set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
+        title(strcat('EDFA = ',num2str(EDFA*1e3),'mW       Pin = ', num2str(Pin*1e3), 'mW'));
+        tit(7) = "Comparison Experimental vs Analytical(mW)";
     end
     if savefig
         for i=1:length(fig)
-            saveas(fig(i),strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Pin_',num2str(Pin*1e3),'mW/',num2str(tit(i))),'jpg');
+            saveas(fig(i),strcat('../Data/EDFA_',num2str(EDFA*1e3),'mW/Pin_',num2str(Pin*1e3),'mW/',num2str(tit(i))),'jpg');
         end
-    end 
+    end
 end
