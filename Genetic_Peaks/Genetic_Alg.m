@@ -13,7 +13,7 @@ Mut_Rate                                    = 0.05;
 Diff                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
-Lim                                         = [10 17 0.2 2 0.15 0.25 0.15 0.25];
+Lim                                         = [10 30 0.2 2 0.15 0.25 0.15 0.25];
 Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation,length(Vec_Pin));
 Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
 Filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
@@ -67,12 +67,10 @@ end
 % 10.0272, 0.2040
 % 15.6578, 1.9774
 % 15.1974   1.6889    0.2329    0.1850;
-% 11.9291    0.4376    0.1505    0.1550
 
 % Pin = 0,68mW %
 % 13.7836, 1.3924
 % 14.6948    1.8295    0.2282    0.2058
-% 
 
 % Pin = 1mW %
 % 15.1963    1.9272    0.2203    0.2475
