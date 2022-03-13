@@ -10,12 +10,12 @@ EDFA                                        = 120e-3;
 Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
 Popsize                                     = 50;
 Mut_Rate                                    = 0.05;
-Diff                                        = zeros(1,Popsize);
+Peaks                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
 Lim                                         = [10 30 0.2 2 0.15 0.25 0.15 0.25];
 Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation,length(Vec_Pin));
-Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
+Storage_Diff                                = zeros(length(Peaks),Max_Generation,length(Vec_Pin));
 Filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
 for Pin=Vec_Pin
@@ -28,20 +28,16 @@ for Pin=Vec_Pin
     while 1  
 
 %% Testing the Population %%
-        [Vec_Prop, Diff] = fitness(EDFA, Pin, Pop, Popsize, Ctrl);
+        [Vec_Prop, Peaks] = fitness(EDFA, Pin, Pop, Popsize, Ctrl);
         
         Storage_Pop(:,:,Generation,Pin_Pos)  = Pop;
-        Storage_Diff(:,Generation,Pin_Pos)   = Diff;
-        if(max(Diff)==min(Diff))
-            disp("No genetic variation");
-            disp(strcat("minDiff == " + num2str(min(Diff))));
-            break
+        Storage_Diff(:,Generation,Pin_Pos)   = Peaks;
         end
 
 %% Crossover %%
         New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);
         
-        print = sprintf('End of Generation %.2d Mean_Diff =  %.2f   Min_Diff= %.2f', Generation, mean(Diff), min(Diff));
+        print = sprintf('End of Generation %.2d Mean_Diff =  %.2f   Min_Diff= %.2f', Generation, mean(Peaks), min(Peaks));
         disp(print); 
         if Generation>=Max_Generation
             disp(['             ---------------     END OF TESTS FOR Pin=  ',num2str(Pin*1e3),'mW. HORÁRIO: ',datestr(datetime('now')), '     ---------------']);

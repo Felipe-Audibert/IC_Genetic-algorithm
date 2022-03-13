@@ -1,4 +1,4 @@
-function [Vec_Prop, Simu] = fitness(EDFA, Pin, Pop, Popsize, Ctrl)
+function [Vec_Prop, Peaks] = fitness(EDFA, Pin, Pop, Popsize, Ctrl)
     
     Peaks = zeros(1,Popsize);
     for i=1:Popsize
