@@ -2,23 +2,26 @@ function [simu] = cascateado(varargin)
 if      nargin==1
    EDFA = 0.28;
    Pin = 0.43e-3;
+   L = 25e3;
    Pop = varargin{1};
    ifplot = 1;
    savefig = 0;
    
-elseif  nargin==3
+elseif  nargin==4
    EDFA = varargin{1};
    Pin = varargin{2};
-   Pop = varargin{3};
+   L = varargin(3);
+   Pop = varargin{4};
    ifplot = 1;
    savefig = 0;
    
-elseif  nargin==5
+elseif  nargin==6
    EDFA = varargin{1};
    Pin = varargin{2};
-   Pop = varargin{3};
-   ifplot = varargin{4};
-   savefig = varargin{5};
+   L = varargin(3)
+   Pop = varargin{4};
+   ifplot = varargin{5};
+   savefig = varargin{6};
    
 else
     error('Wrong number of input variables');
@@ -42,7 +45,7 @@ end
 PsL                                    = 1e-8;                                   % wave Stokes inital value
 y                                      = 0.2261;                                 % peak SBS efficiency (called gamma)
 Alfa                                   = 0.23026*0.201e-3;                       % optical loss coefficient of the fiber 
-L                                      = 25e3;                                   % fiber length
+%L                                      = 25e3;                                   % fiber length
 position_step                          = 100;                                    % position step
 z                                      = 0:position_step:L;                      % propagation position in the fiber in meters
 A                                      = -log(y*L*PsL);                          % auxiliary parameter 
