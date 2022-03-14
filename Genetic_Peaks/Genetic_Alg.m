@@ -2,7 +2,7 @@
 warning off all
 close all
 clc
-disp(['             ---------------     Começo do Algorítmo genético. HORÁRIO: ' datestr(datetime('now')), '     ---------------']);
+disp(['             ---------------     Começo do Algorítmo genético. HOR�?RIO: ' datestr(datetime('now')), '     ---------------']);
 
 %% Variables definition %%
 Max_Generation                              = 15;
@@ -32,7 +32,7 @@ for Pin=Vec_Pin
         
         Storage_Pop(:,:,Generation,Pin_Pos)  = Pop;
         Storage_Diff(:,Generation,Pin_Pos)   = Peaks;
-        end
+
 
 %% Crossover %%
         New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);
@@ -40,7 +40,7 @@ for Pin=Vec_Pin
         print = sprintf('End of Generation %.2d Mean_Diff =  %.2f   Min_Diff= %.2f', Generation, mean(Peaks), min(Peaks));
         disp(print); 
         if Generation>=Max_Generation
-            disp(['             ---------------     END OF TESTS FOR Pin=  ',num2str(Pin*1e3),'mW. HORÁRIO: ',datestr(datetime('now')), '     ---------------']);
+            disp(['             ---------------     END OF TESTS FOR Pin=  ',num2str(Pin*1e3),'mW. HOR�?RIO: ',datestr(datetime('now')), '     ---------------']);
             break
         end
         Generation                             = Generation+1;
