@@ -13,7 +13,7 @@ Mut_Rate                                    = 0.05;
 Peaks                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
-Lim                                         = [10 30 0.2 2 0.15 0.25 0.15 0.25];
+Lim                                         = [0.15 0.3 0.15 0.3 20e3 50e3];
 Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation,length(Vec_Pin));
 Storage_Diff                                = zeros(length(Peaks),Max_Generation,length(Vec_Pin));
 Filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
@@ -32,7 +32,6 @@ for Pin=Vec_Pin
         
         Storage_Pop(:,:,Generation,Pin_Pos)  = Pop;
         Storage_Diff(:,Generation,Pin_Pos)   = Peaks;
-        end
 
 %% Crossover %%
         New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);

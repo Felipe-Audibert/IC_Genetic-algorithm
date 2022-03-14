@@ -25,24 +25,24 @@ else
 end
 
 if length(Pop)==2
-    Gmax = Pop(1);
-    Psat = Pop(2);
-    Coup_1 = 0.2;
-    Coup_2 = 0.19;
-elseif length(Pop)==4
-    Gmax = Pop(1);
-    Psat = Pop(2);
-    Coup_1 = Pop(3);
-    Coup_2 = Pop(4);
+    Coup_1 = Pop(1);
+    Coup_2 = Pop(2);
+elseif length(Pop)==3
+    Coup_1 = Pop(1);
+    Coup_2 = Pop(2);
+    L = Pop(3);
 else
     error('Wrong Pop vector length');
 end
 
 %% Variables definition: 
+Gmax = 15.1974;
+Psat = 1.6889;
+
 PsL                                    = 1e-8;                                   % wave Stokes inital value
 y                                      = 0.2261;                                 % peak SBS efficiency (called gamma)
 Alfa                                   = 0.23026*0.201e-3;                       % optical loss coefficient of the fiber 
-L                                      = 25e3;                                   % fiber length
+%L                                      = 25e3;                                   % fiber length
 position_step                          = 100;                                    % position step
 z                                      = 0:position_step:L;                      % propagation position in the fiber in meters
 A                                      = -log(y*L*PsL);                          % auxiliary parameter 
