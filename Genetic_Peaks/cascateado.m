@@ -2,23 +2,26 @@ function [simu] = cascateado(varargin)
 if      nargin==1
    EDFA = 0.28;
    Pin = 0.43e-3;
+   L = 25e3;
    Pop = varargin{1};
    ifplot = 1;
    savefig = 0;
    
-elseif  nargin==3
+elseif  nargin==4
    EDFA = varargin{1};
    Pin = varargin{2};
-   Pop = varargin{3};
+   L = varargin{3};
+   Pop = varargin{4};
    ifplot = 1;
    savefig = 0;
    
-elseif  nargin==5
+elseif  nargin==6
    EDFA = varargin{1};
    Pin = varargin{2};
-   Pop = varargin{3};
-   ifplot = varargin{4};
-   savefig = varargin{5};
+   L = varargin{3};
+   Pop = varargin{4};
+   ifplot = varargin{5};
+   savefig = varargin{6};
    
 else
     error('Wrong number of input variables');
