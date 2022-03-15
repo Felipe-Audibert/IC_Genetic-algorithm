@@ -5,6 +5,7 @@ clc
 disp(['             ---------------     Começo do Algorítmo genético. HOR�?RIO: ' datestr(datetime('now')), '     ---------------']);
 
 %% Variables definition %%
+EDFA                                        = 220e-3;
 Max_Generation                              = 15;
 Popsize                                     = 50;
 Mut_Rate                                    = 0.05;
