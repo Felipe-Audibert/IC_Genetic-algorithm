@@ -12,8 +12,8 @@ Peaks                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
 Lim                                         = [0.15 0.3 0.15 0.3 20e3 50e3 0.1e-3 10e-3];
-Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation);
-Storage_Diff                                = zeros(length(Peaks),Max_Generation);
+Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation,length(Vec_Pin));
+Storage_Diff                                = zeros(length(Peaks),Max_Generation,length(Vec_Pin));
 Filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
     Generation                                  = 1;
@@ -24,7 +24,7 @@ Pop                                         = pop_gen(Popsize, Lim);
 while 1  
 
 %% Testing the Population %%
-    [Vec_Prop, Peaks] = fitness(Pop, Popsize, Ctrl);
+    [Vec_Prop, Peaks] = fitness(EDFA, Pin, Pop, Popsize, Ctrl);
 
     Storage_Pop(:,:,Generation,Pin_Pos)  = Pop;
     Storage_Diff(:,Generation,Pin_Pos)   = Peaks;
@@ -44,10 +44,12 @@ while 1
 end
 save(Filepath,'Storage_Pop','Storage_Diff');
 
-Individual = zeros(length(Pop(1,:)));
-[lin, col] = find(Storage_Diff(:,:,i)==min(min(Storage_Diff(:,:,i))));
-Individual(i,:) = Storage_Pop(lin(1),:,col(2),i)
-
+Individual = zeros(length(Vec_Pin),length(Pop(1,:)));
+for i=1:length(Vec_Pin)
+    [lin, col] = find(Storage_Diff(:,:,i)==min(min(Storage_Diff(:,:,i))));
+    Individual(i,:) = Storage_Pop(lin(1),:,col(2),i)
+end
+    
 %% EDFA = 220mW 
 % Pin = 0,43mW %
 % 14.4762, 1.1661

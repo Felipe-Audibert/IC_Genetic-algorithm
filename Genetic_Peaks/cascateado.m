@@ -1,27 +1,13 @@
 function [simu] = cascateado(varargin)  
 if      nargin==1
-   EDFA = 0.28;
-   Pin = 0.43e-3;
-   L = 25e3;
    Pop = varargin{1};
    ifplot = 1;
    savefig = 0;
    
-elseif  nargin==4
-   EDFA = varargin{1};
-   Pin = varargin{2};
-   L = varargin{3};
-   Pop = varargin{4};
-   ifplot = 1;
-   savefig = 0;
-   
-elseif  nargin==6
-   EDFA = varargin{1};
-   Pin = varargin{2};
-   L = varargin{3};
-   Pop = varargin{4};
-   ifplot = varargin{5};
-   savefig = varargin{6};
+elseif  nargin==3
+   Pop = varargin{1};
+   ifplot = varargin{2};
+   savefig = varargin{3};
    
 else
     error('Wrong number of input variables');
@@ -30,10 +16,11 @@ end
 if length(Pop)==2
     Coup_1 = Pop(1);
     Coup_2 = Pop(2);
-elseif length(Pop)==3
+elseif length(Pop)==4
     Coup_1 = Pop(1);
     Coup_2 = Pop(2);
     L = Pop(3);
+    Pin = Pop(4);
 else
     error('Wrong Pop vector length');
 end
@@ -53,7 +40,7 @@ Pcr                                    = real((A+sqrt((A^2+4*A)))./(2*y*L));    
 Psc                                    = 1/(y*L);                                % critical Stokes power
 turns                                  = 10;                                     % number of cavity turns in the fiber
 round_trips                            = (1:turns)';                             % round trips inside of the cavity   
-stokes_lines_number                    = 40;                                     % number of output sotkes channels
+stokes_lines_number                    = 30;                                     % number of output sotkes channels
 Pp0                                    = Pin;                                    % Potencia bombeio inicial [W]
 Lambda                                 = [1564.18:0.004:1568.18];
 
