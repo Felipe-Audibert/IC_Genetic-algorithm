@@ -27,9 +27,9 @@ end
 
 %% Variables definition: 
 % Variaveis de ganho
-ganho_A = 32.5;
+ganho_A = 32.3;
 ganho_B = 8;
-ganho_C = 0.5e-5;
+ganho_C = 0.1e-5;
 ganho_D = 4;
 
 ganho = [ganho_A ganho_B ganho_C ganho_D];
@@ -45,7 +45,7 @@ Pcr                                    = real((A+sqrt((A^2+4*A)))./(2*y*L));    
 Psc                                    = 1/(y*L);                                % critical Stokes power
 turns                                  = 10;                                     % number of cavity turns in the fiber
 round_trips                            = (1:turns)';                             % round trips inside of the cavity   
-stokes_lines_number                    = 20;                                     % number of output sotkes channels
+stokes_lines_number                    = 25;                                     % number of output sotkes channels
 Pp0                                    = Pin;                                    % Potencia bombeio inicial [W]
 Lambda                                 = [1564.18:0.004:1568.18];
 
@@ -214,6 +214,9 @@ end
     Pot_depois_edfa_total = sum(real(bombeio))*1e3
     
     simu = real(Pot_saida)*1e3;             %mW
+    count_weak
+    count_high
+    count_satu
     
     if ifplot || savefig
         fig(6) = figure('visible',ifplot);

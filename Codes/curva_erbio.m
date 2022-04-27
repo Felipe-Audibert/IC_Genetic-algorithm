@@ -9,10 +9,10 @@ close all
 
 %%%% em [mW] %%%
 
-Pin = linspace(0,30,1000);
-A = 32;
+Pin = linspace(0,100,1000);
+A = 32.3;
 B = 8;
-C = 0.5e-5;
+C = 0.1e-5;
 D = 4;
 
 GdB = A./(sqrt(B + C*Pin.^D))
