@@ -27,8 +27,8 @@ while 1
 %% Testing the Population %%
     [Vec_Prop, Peaks] = fitness(Pop, Popsize, Ctrl);
 
-    Storage_Pop(:,:,Generation,Pin_Pos)  = Pop;
-    Storage_Diff(:,Generation,Pin_Pos)   = Peaks;
+    Storage_Pop(:,:,Generation)  = Pop;
+    Storage_Diff(:,Generation)   = Peaks;
 
 %% Crossover %%
     New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);
