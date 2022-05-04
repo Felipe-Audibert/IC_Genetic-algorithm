@@ -31,7 +31,7 @@ function [Vec_Prop, Peaks, Pop, erros, vec_erros] = fitness(Pop, Popsize, Ctrl, 
             end
             loop_count = loop_count + 1;
         end
-        loop_count = 0;
+        loop_count = 1;
     end
     maximo = max(Peaks);
     Vec_Prop                                = (Peaks./maximo).^Ctrl;
