@@ -2,59 +2,60 @@
 warning off all
 close all
 clc
-disp(['             ---------------     Começo do Algorítmo genético. HORÁRIO: ' datestr(datetime('now')), '     ---------------']);
+disp(['             ---------------     Começo do Algorítmo genético. HOR�?RIO: ' datestr(datetime('now')), '     ---------------']);
 
 %% Variables definition %%
+EDFA                                        = 220e-3;
 Max_Generation                              = 15;
-EDFA                                        = 120e-3;
-Vec_Pin                                     = [0.43 0.68 1 4.01 14]*1e-3;
 Popsize                                     = 50;
 Mut_Rate                                    = 0.05;
 Peaks                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
-Lim                                         = [10 30 0.2 2 0.15 0.25 0.15 0.25];
-Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation,length(Vec_Pin));
-Storage_Diff                                = zeros(length(Peaks),Max_Generation,length(Vec_Pin));
+Lim                                         = [0.6 0.9 0.6 0.9 15e3 30e3 0.3e-3 1e-3];
+Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation);
+Storage_Diff                                = zeros(length(Peaks),Max_Generation);
 Filepath                                    = strcat('Data/EDFA_',num2str(EDFA*1e3),'mW/Simulation_1');
 
-for Pin=Vec_Pin
     Generation                                  = 1;
-    Pin_Pos                                     = find(Vec_Pin==Pin);
     
 %% Initial Pop Generation %%
-    Pop                                         = pop_gen(Popsize, Lim);
-    
-    while 1  
+Pop                                         = pop_gen(Popsize, Lim);
+
+while 1  
 
 %% Testing the Population %%
+<<<<<<< HEAD
         [Vec_Prop, Peaks] = fitness(EDFA, Pin, Pop, Popsize, Ctrl);
         
         Storage_Pop(:,:,Generation,Pin_Pos)  = Pop;
         Storage_Diff(:,Generation,Pin_Pos)   = Peaks;
+=======
+    [Vec_Prop, Peaks] = fitness(Pop, Popsize, Ctrl);
+
+    Storage_Pop(:,:,Generation)  = Pop;
+    Storage_Diff(:,Generation)   = Peaks;
+>>>>>>> 7f65b422e9df00720575504d857a50dbb68ab60f
 
 %% Crossover %%
-        New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);
-        
-        print = sprintf('End of Generation %.2d Mean_Diff =  %.2f   Min_Diff= %.2f', Generation, mean(Peaks), min(Peaks));
-        disp(print); 
-        if Generation>=Max_Generation
-            disp(['             ---------------     END OF TESTS FOR Pin=  ',num2str(Pin*1e3),'mW. HORÁRIO: ',datestr(datetime('now')), '     ---------------']);
-            break
-        end
-        Generation                             = Generation+1;
-        Vec_Sel                                = [];
-        Pop                                    = New_Pop;
+    New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);
+
+    print = sprintf('End of Generation %.2d Mean_Peaks =  %.2f   Max_Peaks= %.2f', Generation, mean(Peaks), max(Peaks));
+    disp(print); 
+    if Generation>=Max_Generation
+        disp(['             ---------------     END OF TESTS HOR�?RIO: ',datestr(datetime('now')), '     ---------------']);
+        break
     end
+    Generation                             = Generation+1;
+    Vec_Sel                                = [];
+    Pop                                    = New_Pop;
 end
 save(Filepath,'Storage_Pop','Storage_Diff');
 
-Individual = zeros(length(Vec_Pin),length(Pop(1,:)));
-for i=1:length(Vec_Pin)
-    [lin, col] = find(Storage_Diff(:,:,i)==min(min(Storage_Diff(:,:,i))));
-    Individual(i,:) = Storage_Pop(lin(1),:,col(2),i)
-end
-    
+Individual = zeros(length(Pop(1,:)));
+[lin, col] = find(Storage_Diff(:,:,i)==min(min(Storage_Diff(:,:,i))));
+Individual(i,:) = Storage_Pop(lin(1),:,col(2),i)
+
 %% EDFA = 220mW 
 % Pin = 0,43mW %
 % 14.4762, 1.1661
