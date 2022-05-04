@@ -32,7 +32,6 @@ for Pin=Vec_Pin
         
         Storage_Pop(:,:,Generation,Pin_Pos)  = Pop;
         Storage_Diff(:,Generation,Pin_Pos)   = Peaks;
-        end
 
 %% Crossover %%
         New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);

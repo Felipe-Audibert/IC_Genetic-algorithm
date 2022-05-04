@@ -18,7 +18,7 @@ elseif  nargin==4
 elseif  nargin==6
    EDFA = varargin{1};
    Pin = varargin{2};
-   L = varargin(3)
+   L = varargin{3};
    Pop = varargin{4};
    ifplot = varargin{5};
    savefig = varargin{6};
