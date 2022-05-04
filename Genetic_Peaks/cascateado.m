@@ -3,8 +3,7 @@ if      nargin==1
    Pop = varargin{1};
    ifplot = 1;
    savefig = 0;
-   
-<<<<<<< HEAD
+
 elseif  nargin==4
    EDFA = varargin{1};
    Pin = varargin{2};
@@ -20,12 +19,11 @@ elseif  nargin==6
    Pop = varargin{4};
    ifplot = varargin{5};
    savefig = varargin{6};
-=======
+
 elseif  nargin==3
    Pop = varargin{1};
    ifplot = varargin{2};
    savefig = varargin{3};
->>>>>>> 7f65b422e9df00720575504d857a50dbb68ab60f
    
 else
     error('Wrong number of input variables');
@@ -63,7 +61,7 @@ Pcr                                    = real((A+sqrt((A^2+4*A)))./(2*y*L));    
 Psc                                    = 1/(y*L);                                % critical Stokes power
 turns                                  = 10;                                     % number of cavity turns in the fiber
 round_trips                            = (1:turns)';                             % round trips inside of the cavity   
-stokes_lines_number                    = 25;                                     % number of output sotkes channels
+stokes_lines_number                    = 35;                                     % number of output sotkes channels
 Pp0                                    = Pin;                                    % Potencia bombeio inicial [W]
 Lambda                                 = [1564.18:0.004:1568.18];
 
@@ -227,14 +225,11 @@ if ifplot || savefig
     title(strcat('Pin de ', num2str(Pin*1e3), 'mW'));
 end
     %%%%%%% Potencias totais em mW %%%%%%%
-    Pot_saida_total = sum(real(Pot_saida))*1e3
-    Pot_antes_edfa_total = sum(real(bombeio_pre_edfa))*1e3
-    Pot_depois_edfa_total = sum(real(bombeio))*1e3
+    Pot_saida_total = sum(real(Pot_saida))*1e3;
+    Pot_antes_edfa_total = sum(real(bombeio_pre_edfa))*1e3;
+    Pot_depois_edfa_total = sum(real(bombeio))*1e3;
     
     simu = real(Pot_saida)*1e3;             %mW
-    count_weak
-    count_high
-    count_satu
     
     if ifplot || savefig
         fig(6) = figure('visible',ifplot);
