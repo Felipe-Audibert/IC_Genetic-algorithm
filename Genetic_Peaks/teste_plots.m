@@ -4,7 +4,7 @@
 close all 
 clear all
 
-load('Simulacao_31Picos.mat')
+load('Simulation_1_broad_space.mat')
 
     for gen = 1:15
        fig(gen) = figure('visible',1);
@@ -12,8 +12,8 @@ load('Simulacao_31Picos.mat')
         xlabel('acoplador_1')
         ylabel('acoplador_2')
         zlabel('Nº de picos')
-        xlim([0.15,0.3])
-        ylim([0.15,0.3])
+        xlim([0.45,0.95])
+        ylim([0.45,0.95])
         zlim([5,35])
     end
         
@@ -31,7 +31,7 @@ load('Simulacao_31Picos.mat')
         
         
     for i = 1:15
-        saveas(fig(i),strcat('Geração', num2str(i),'.png'));
+       saveas(fig(i),strcat('Geração', num2str(i),'.png'));
     end
         
         

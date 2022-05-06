@@ -2,7 +2,7 @@
 warning off all
 close all
 clc
-disp(['             ---------------     Começo do Algorítmo genético. HORÁRIO: ' datestr(datetime('now')), '     ---------------']);
+disp(['             ---------------     Começo do Algorítmo genético. HOR�?RIO: ' datestr(datetime('now')), '     ---------------']);
 
 %% Variables definition %%
 file_counter = 1;
@@ -21,7 +21,7 @@ Mut_Rate                                    = 0.05;
 Peaks                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
-Lim                                         = [0.6 0.88 0.6 0.88 15e3 30e3 0.3e-3 1e-3]; %[coup_1 coup_2 L Pin]
+Lim                                         = [0.45 0.95 0.45 0.95 15e3 30e3 0.3e-3 1e-3]; %[coup_1 coup_2 L Pin]
 Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation);
 Storage_Diff                                = zeros(length(Peaks),Max_Generation);
 Generation                                  = 1;
