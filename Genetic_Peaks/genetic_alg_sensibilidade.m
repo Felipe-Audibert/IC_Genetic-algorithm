@@ -1,3 +1,8 @@
+function [] = genetic_alg_sensibilidade(in_gen,in_pop_size,in_mut_rate)
+%UNTITLED3 Summary of this function goes here
+%   Detailed explanation goes here
+
+
 %% Função de ganho variável%%
 warning off all
 close all
@@ -5,19 +10,14 @@ clc
 disp(['             ---------------     Começo do Algorítmo genético. HOR�?RIO: ' datestr(datetime('now')), '     ---------------']);
 
 %% Variables definition %%
-file_counter = 1;
-while 1
-    if ( not(isfile(sprintf("Workspaces/Simulation_%d", file_counter))) )
-        Filepath = sprintf("Workspaces/Simulation_%d", file_counter);
-        break
-    end
-        file_counter = file_counter + 1;
-end
+
+File_name = sprintf("Simulation_gen_%d_pop_%d_mut_%.3f.mat",in_gen,in_pop_size,in_mut_rate);
+
 
 EDFA                                        = 220e-3;
-Max_Generation                              = 20;
-Popsize                                     = 50;
-Mut_Rate                                    = 0.02;
+Max_Generation                              = in_gen;
+Popsize                                     = in_pop_size;
+Mut_Rate                                    = in_mut_rate;
 Peaks                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
@@ -54,23 +54,11 @@ while 1
     Vec_Sel                                = [];
     Pop                                    = New_Pop;
 end
-save(Filepath,'Storage_Pop','Storage_Diff', 'Storage_Erros');
+save(File_name,'Storage_Pop','Storage_Diff', 'Storage_Erros');
 
-Individual = zeros(length(Pop(1,:)));
-[lin, col] = find(Storage_Diff(:,:,i)==min(min(Storage_Diff(:,:,i))));
-Individual(i,:) = Storage_Pop(lin(1),:,col(2),i)
 
-%% EDFA = 220mW 
-% Pin = 0,43mW %
-% 14.4762, 1.1661
-%15.2761, 1.3089;
-% 10.0272, 0.2040
-% 15.6578, 1.9774
-% 15.1974   1.6889    0.2329    0.1850;
 
-% Pin = 0,68mW %
-% 13.7836, 1.3924
-% 14.6948    1.8295    0.2282    0.2058
 
-% Pin = 1mW %
-% 15.1963    1.9272    0.2203    0.2475
+
+end
+

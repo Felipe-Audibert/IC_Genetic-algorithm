@@ -1,0 +1,14 @@
+warning off all
+close all
+clear all
+clc
+disp(['             ---------------     Comecando otimizacao do Algoritmo genetico. HORARIO: ' datestr(datetime('now')), '     ---------------']);
+
+
+for i = 0.03:0.01:0.08
+genetic_alg_sensibilidade(20,50,i);
+
+end
+
+disp(['             ---------------    Fim otimizacao do Algoritmo genetico. HORARIO: ' datestr(datetime('now')), '     ---------------']);
+
