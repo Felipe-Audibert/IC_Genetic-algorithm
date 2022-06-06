@@ -197,7 +197,7 @@ for comp_onda = 1:stokes_lines_number
     ganho_EDFA(comp_onda) = ganho_simples(PsL_cav_2(cav_pos-1,1)/2 + + pot_atual_bom/2,ganho);    
 end
 
-if ifplot || not(strcmp(savefig, ''))
+if ifplot || savefig != ''
     tit(1) = "Potência na saída do laser [mW]";
     fig(1) = figure('visible',ifplot);
     plot(1:comp_onda,Pot_saida*1e3,'o')
@@ -231,7 +231,7 @@ end
     
     simu = real(Pot_saida)*1e3;             %mW
     
-    if ifplot || not(strcmp(savefig, ''))
+    if ifplot || savefig
         fig(6) = figure('visible',ifplot);
         plot(simu,'b', 'LineWidth', 2)
         xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
@@ -257,10 +257,9 @@ end
         title(strcat('Pin = ', num2str(Pin*1e3), 'mW'));
         tit(7) = "Comparison Experimental vs Analytical(mW)";
     end
-    if not(strcmp(savefig, ''))
+    if savefig != ''
         for i=1:length(fig)
-            mkdir(savefig)
-            saveas(fig(i),strcat(savefig, '\', tit(i), '.jpg'));
+            saveas(fig(i),strcat('../Data/EDFA_',num2str(EDFA*1e3),'mW/Pin_',num2str(Pin*1e3),'mW/',num2str(tit(i))),'jpg');
         end
     end
 end

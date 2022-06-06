@@ -1,0 +1,15 @@
+close all
+clear all
+
+dir = dir('./plot_fig_Workspaces')
+
+for fileName = dir.
+
+WorkspaceName = 'Simulation_gen_15_pop_50_mut_0.040';
+
+load(strcat(WorkspaceName, '.mat'));
+
+[pop gen] = find(Storage_Diff == max(max(Storage_Diff)), 1);
+%[pop gen] = find(Storage_Diff == min(min(Storage_Diff)), 1);
+
+cascateado(Storage_Pop(pop, :, gen), 1, strcat('.\Figures\', WorkspaceName));
