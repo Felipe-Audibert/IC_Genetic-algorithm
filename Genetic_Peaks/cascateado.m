@@ -41,6 +41,11 @@ else
     error('Wrong Pop vector length');
 end
 
+if not(ischar(savefig)) || not(isstring(savefig))
+   savefig = ''; 
+end
+    
+
 %% Variables definition: 
 % Variaveis de ganho
 ganho_A = 32.3;
