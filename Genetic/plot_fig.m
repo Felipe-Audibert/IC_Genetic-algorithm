@@ -15,6 +15,7 @@ for folder = dirs(1, :)
             if (endsWith(fileName, '.mat'))
 
                 load(strcat('./plot_fig_Workspaces/', folderName, '/', fileName));
+                Storage_Diff = Storage_Diff(:, :, 1);
                 WorkspaceName = erase(fileName, '.mat');
                 mkdir(strcat('./Figures/', folderName, '/', WorkspaceName));
 

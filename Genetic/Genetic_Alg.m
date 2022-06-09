@@ -15,7 +15,7 @@ Vec_Sel                                     = [];
 Ctrl                                        = 1;
 Lim                                         = [20 35 5 20 0.1e-6 0.1e-4 1 10 0.15 0.25 0.15 0.25];
 Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation);
-Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
+Storage_Diff                                = zeros(length(Diff),Max_Generation);
 FileName                                    = strcat('A=', num2str(Lim(1)), '-', num2str(Lim(2)), ', B=', num2str(Lim(3)), '-', num2str(Lim(4)), ', C=', num2str(Lim(5)*1e6), 'e-6 -', num2str(Lim(6)*1e6), 'e-6, D=', num2str(Lim(7)), '-', num2str(Lim(8)), ', Coup1=', num2str(Lim(9)), '-', num2str(Lim(10)), ', Coup2=', num2str(Lim(11)), '-', num2str(Lim(12)), '.mat');
 
 mkdir(strcat('./Workspaces/', num2str(EDFA*1e3), 'mw'));
@@ -51,13 +51,6 @@ for Pin=Vec_Pin
         Pop                                    = New_Pop;
     end
     save(strcat('./Workspaces/', num2str(EDFA*1e3), 'mw/', num2str(Pin*1e3), 'mW -- ', FileName),'Storage_Pop','Storage_Diff', 'Vec_Erros', 'EDFA', 'Pin');
-end
-
-
-Individual = zeros(length(Vec_Pin),length(Pop(1,:)));
-for i=1:length(Vec_Pin)
-    [lin, col] = find(Storage_Diff(:,:,i)==min(min(Storage_Diff(:,:,i))));
-    Individual(i,:) = Storage_Pop(lin(1),:,col(2),i)
 end
     
 %% EDFA = 220mW 
