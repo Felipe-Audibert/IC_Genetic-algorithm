@@ -10,7 +10,7 @@ for file = dirs(1, :)
     fileName = char(file);
     if (endsWith(fileName, '.mat'))
 
-        load(fileName);
+        load(strcat('./plot_fig_Workspaces/', fileName));
         WorkspaceName = erase(fileName, '.mat');
 
         [pop, gen] = find(Storage_Diff == max(max(Storage_Diff)), 1);

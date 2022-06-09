@@ -1,4 +1,4 @@
-function [exp_norm, osa_simulado] = cascateado(varargin)  
+function [exp_norm, osa_simulado] = cascateado_antigo(varargin)  
 if      nargin==1
    EDFA = 0.28;
    Pin = 0.43e-3;
@@ -69,7 +69,7 @@ Power = eval(['Power' num2str(Num_Workspace)]);
 PsL                                    = 1e-8;                                   % wave Stokes inital value
 y                                      = 0.2261;                                 % peak SBS efficiency (called gamma)
 Alfa                                   = 0.23026*0.201e-3;                       % optical loss coefficient of the fiber 
-L                                      = 45e3;                                   % fiber length
+L                                      = 25e3;                                   % fiber length
 position_step                          = 100;                                    % position step
 z                                      = 0:position_step:L;                      % propagation position in the fiber in meters
 A                                      = -log(y*L*PsL);                          % auxiliary parameter 
@@ -77,8 +77,8 @@ Pcr                                    = real((A+sqrt((A^2+4*A)))./(2*y*L));    
 Psc                                    = 1/(y*L);                                % critical Stokes power
 turns                                  = 10;                                     % number of cavity turns in the fiber
 round_trips                            = (1:turns)';                             % round trips inside of the cavity   
-stokes_lines_number                    = 20;                                     % number of output sotkes channels
-Pp0                                    = 0.1e-3;                                    % Potencia bombeio inicial [W]
+stokes_lines_number                    = 18;                                     % number of output sotkes channels
+Pp0                                    = Pin;                                    % Potencia bombeio inicial [W]
 
 %% Markers for loops:
 pos                                    = 1;                                      % position marker along the fiber
@@ -267,7 +267,7 @@ end
     eixo_y = eixo_y*max(P1);
     
     for tt=1:stokes_lines_number
-        ajuste = (mean(Lambda)-(locs480(1)+(locs480(2)-locs480(1))*tt))*74*pi/delta_lambda;
+        ajuste = (mean(Lambda)-locs480(tt))*74*pi/delta_lambda;
         eixo_y(tt,:) = sech(eixo_x + ajuste).^2;
         eixo_y(tt,:) = eixo_y(tt,:)*L2(tt);
         osa_simulado = eixo_y(tt,:) + osa_simulado;
@@ -290,16 +290,20 @@ end
     
     if ifplot || savefig
         fig(6) = figure('visible',ifplot);
-        plot(Lambda,osa_simulado,'b', 'LineWidth', 3)
-        xlabel('Comprimeto de onda (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
-        ylabel('Espectro ótico (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
-        axis([1565.5 1568 0 1.1])
+        plot(Lambda,exp_norm,'r', 'LineWidth', 2)
+        hold on
+        plot(Lambda,osa_simulado,'b', 'LineWidth', 2)
+        xlabel('Wavelength (nm)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
+        ylabel('Optical spectrum (u.a.)','FontName','Times New Roman','FontSize',16,'FontWeight','bold')
+        legend('Experimental','Analytical solution','FontSize',16,'FontWeight','bold')
+        axis([1565.5 1567.5 0 1.1])
         plt = gca;
         plt.YAxis(1).Color = 'k';
         plt.XAxis(1).Color = 'k';
         set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
         set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
-        title('Perfil do melhor indivíduo encontrado', 'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
+        title(strcat('EDFA = ',num2str(EDFA*1e3),'mW       Pin = ', num2str(Pin*1e3), 'mW'));
+        tit(6) = "Comparison Experimental vs Analytical";
         
         fig(7) = figure('visible',ifplot);
         plot(experimental,'r-o')

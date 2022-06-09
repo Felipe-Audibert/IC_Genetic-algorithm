@@ -32,9 +32,7 @@ function [Vec_Prop, Diff, Pop, erros, vec_erros] = fitness(EDFA, Pin, Pop, Popsi
             end
             loop_count = loop_count + 1;
             if loop_count >= 50
-                Diff(i) = 0;
-                break;
-            end
+                
         end
         loop_count = 1;
     end
