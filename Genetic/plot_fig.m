@@ -21,7 +21,7 @@ for folder = dirs(1, :)
 
                 %[pop, gen] = find(Storage_Diff == max(max(Storage_Diff)), 1);
                 [pop, gen] = find(Storage_Diff == min(min(Storage_Diff)), 1);
-
+                print_pop(Storage_Pop(pop, :, gen))
                 cascateado(EDFA, Pin, Storage_Pop(pop, :, gen), 0, strcat('.\Figures\', folderName, '\', WorkspaceName));
 
                 %% Plots manuais

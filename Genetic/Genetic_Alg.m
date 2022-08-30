@@ -6,51 +6,56 @@ disp(['             ---------------     Começo do Algorítmo genético. HORÁRI
 
 %% Variables definition %%
 Max_Generation                              = 15;
-EDFA                                        = 200e-3;
+Vec_EDFA                                    = [120 150 170 200 250 280]*1e-3;
 Vec_Pin                                     = [0.43 0.68 1 4.01]*1e-3;
 Popsize                                     = 50;
 Mut_Rate                                    = 0.05;
 Diff                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
-Lim                                         = [20 35 5 20 0.1e-6 0.1e-4 1 10 0.15 0.25 0.15 0.25];
+Lim                                         = [8 20 0.1 5 0.05e-5 2e-5 1 10 0 1 0 1];
 Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation);
 Storage_Diff                                = zeros(length(Diff),Max_Generation);
-FileName                                    = strcat('A=', num2str(Lim(1)), '-', num2str(Lim(2)), ', B=', num2str(Lim(3)), '-', num2str(Lim(4)), ', C=', num2str(Lim(5)*1e6), 'e-6 -', num2str(Lim(6)*1e6), 'e-6, D=', num2str(Lim(7)), '-', num2str(Lim(8)), ', Coup1=', num2str(Lim(9)), '-', num2str(Lim(10)), ', Coup2=', num2str(Lim(11)), '-', num2str(Lim(12)), '.mat');
+FileName                                    = strcat('A=', num2str(Lim(1)), '-', num2str(Lim(2)), ', B=', num2str(Lim(3)), ...
+                                                    '-', num2str(Lim(4)), ', C=', num2str(Lim(5)*1e6), 'e-6 -', num2str(Lim(6)*1e6), ...
+                                                    'e-6, D=', num2str(Lim(7)), '-', num2str(Lim(8)), ', Coup1=', num2str(Lim(9)), '-', ...
+                                                    num2str(Lim(10)), ', Coup2=', num2str(Lim(11)), '-', num2str(Lim(12)), '.mat');
 
-mkdir(strcat('./Workspaces/', num2str(EDFA*1e3), 'mw'));
-
-for Pin=Vec_Pin
-    Generation                                  = 1;
-    Pin_Pos                                     = find(Vec_Pin==Pin);
-    Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation);
-    Storage_Diff                                = zeros(length(Diff),Max_Generation,length(Vec_Pin));
-    
-%% Initial Pop Generation %%
-    Pop                                         = pop_gen(Popsize, Lim);
-    
-    while 1  
-
-%% Testing the Population %%
-        [Vec_Prop, Diff, Pop, erros, Vec_Erros] = fitness(EDFA, Pin, Pop, Popsize, Ctrl, Lim);
+for EDFA=Vec_EDFA
+    mkdir(strcat('./Workspaces/', num2str(EDFA*1e3), 'mw')); 
+    for Pin=Vec_Pin
+        Generation                                  = 1;
+        Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation);
+        Storage_Diff                                = zeros(length(Diff),Max_Generation);
         
-        Storage_Pop(:,:,Generation)  = Pop;
-        Storage_Diff(:,Generation)   = Diff;
-
-%% Crossover %%
-        New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);
+    %% Initial Pop Generation %%
+        Pop                                         = pop_gen(Popsize, Lim);
         
-        print = sprintf('End of Generation %.2d Mean_Diff =  %.2f   Min_Diff= %.2f', Generation, mean(Diff), min(Diff));
-        disp(print); 
-        if Generation>=Max_Generation
-            disp(['             ---------------     END OF TESTS FOR Pin=  ',num2str(Pin*1e3),'mW. HORÁRIO: ',datestr(datetime('now')), '     ---------------']);
-            break
+        while 1  
+    
+    %% Testing the Population %%
+            [Vec_Prop, Diff, Pop, erros, Vec_Erros] = fitness(EDFA, Pin, Pop, Popsize, Ctrl, Lim);
+            
+            Storage_Pop(:,:,Generation)  = Pop;
+            Storage_Diff(:,Generation)   = Diff;
+    
+    %% Crossover %%
+            New_Pop             = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop);
+            
+            print = sprintf('End of Generation %.2d Mean_Diff =  %.2f   Min_Diff= %.2f', Generation, mean(Diff), min(Diff));
+            disp(print); 
+            if Generation>=Max_Generation
+                disp(['             ---------------     END OF TESTS FOR Pin=  ',num2str(Pin*1e3),'mW. HORÁRIO: ',datestr(datetime('now')), '     ---------------']);
+                break
+            end
+            Generation                             = Generation+1;
+            Vec_Sel                                = [];
+            Pop                                    = New_Pop;
         end
-        Generation                             = Generation+1;
-        Vec_Sel                                = [];
-        Pop                                    = New_Pop;
+        save(strcat('./Workspaces/', num2str(EDFA*1e3), 'mw/', num2str(Pin*1e3), 'mW -- ', FileName),'Storage_Pop','Storage_Diff', 'Vec_Erros', 'EDFA', 'Pin');
     end
-    save(strcat('./Workspaces/', num2str(EDFA*1e3), 'mw/', num2str(Pin*1e3), 'mW -- ', FileName),'Storage_Pop','Storage_Diff', 'Vec_Erros', 'EDFA', 'Pin');
+    disp(['             ---------------     END OF TESTS FOR EDFA=  ',num2str(EDFA*1e3),'mW. HORÁRIO: ',datestr(datetime('now')), '     ---------------']);
+    clear Storage_Pop Storage_Diff Vec_Erros ;
 end
     
 %% EDFA = 220mW 

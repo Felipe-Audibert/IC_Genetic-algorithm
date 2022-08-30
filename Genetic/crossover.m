@@ -4,7 +4,12 @@ function [New_Pop] = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop)
     New_Pop                                     = zeros(Popsize,length(Lim)/2);
 
     for i=1:Popsize
-            Vec_Sel                             = [Vec_Sel, ones(1,round(Vec_Prop(i)*1000))*i];
+        if isnan(Vec_Prop(i))
+            Vec_Prop(i) = 0;
+        elseif Vec_Prop(i) == inf
+            Vec_Prop(i) = 1000000
+        end
+        Vec_Sel                             = [Vec_Sel, ones(1,round(Vec_Prop(i)*1000))*i];
     end
     for i=1:Popsize/2
         Cross                               = [Vec_Sel(ceil(rand()*length(Vec_Sel))) Vec_Sel(ceil(rand()*length(Vec_Sel)))];
