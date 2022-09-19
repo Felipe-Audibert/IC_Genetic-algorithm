@@ -7,7 +7,7 @@ function [New_Pop] = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop)
         if isnan(Vec_Prop(i))
             Vec_Prop(i) = 0;
         elseif Vec_Prop(i) == inf
-            Vec_Prop(i) = 1000000
+            Vec_Prop(i) = 1000000;
         end
         Vec_Sel                             = [Vec_Sel, ones(1,round(Vec_Prop(i)*1000))*i];
     end
@@ -31,7 +31,7 @@ function [New_Pop] = crossover(Lim, Pop, Popsize, Mut_Rate, Vec_Prop)
     for i=1:Popsize
         for j=1:2:length(Lim)
             if rand()<=Mut_Rate
-                New_Pop(i, j/2+0.5) = [Lim(j)+rand()*((Lim(j+1)-Lim(j)))];
+                New_Pop(i, j/2+0.5) = Lim(j) + rand()*((Lim(j+1)-Lim(j)));
             end
         end
     end

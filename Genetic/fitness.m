@@ -8,6 +8,8 @@ function [Vec_Prop, Diff, Pop, erros, vec_erros] = fitness(EDFA, Pin, Pop, Popsi
         while 1
             try
                 [Experimental, Analytical]          = cascateado(EDFA, Pin, Pop(i, :), 0, 0);
+                Experimental(Experimental < -40)    = -40;
+                Analytical(Analytical < -40)        = -40;
                 Diff(i)                             = sum(abs(Experimental.' - Analytical));
                 if (loop_count > 1)
                     disp("-------------------------------------------------------------------Indivíduo bem sucedido!");
@@ -31,8 +33,8 @@ function [Vec_Prop, Diff, Pop, erros, vec_erros] = fitness(EDFA, Pin, Pop, Popsi
                 vec_erros(erros, :) = Pop(i,:);
             end
             loop_count = loop_count + 1;
-            if loop_count >= 50
-                Diff(i) = 0;
+            if loop_count >= 15
+                Diff(i) = Inf;
                 break;
             end
         end

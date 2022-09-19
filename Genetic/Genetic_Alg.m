@@ -6,20 +6,19 @@ disp(['             ---------------     Começo do Algorítmo genético. HORÁRI
 
 %% Variables definition %%
 Max_Generation                              = 15;
-Vec_EDFA                                    = [120 150 170 200 250 280]*1e-3;
+Vec_EDFA                                    = [120 150 200 250 280]*1e-3;
 Vec_Pin                                     = [0.43 0.68 1 4.01]*1e-3;
 Popsize                                     = 50;
 Mut_Rate                                    = 0.05;
 Diff                                        = zeros(1,Popsize);
 Vec_Sel                                     = [];
 Ctrl                                        = 1;
-Lim                                         = [8 20 0.1 5 0.05e-5 2e-5 1 10 0 1 0 1];
+Lim                                         = [8 20 0.1 5 5e-7 5e-4 1 10];
 Storage_Pop                                 = zeros(Popsize,length(Lim)/2,Max_Generation);
 Storage_Diff                                = zeros(length(Diff),Max_Generation);
 FileName                                    = strcat('A=', num2str(Lim(1)), '-', num2str(Lim(2)), ', B=', num2str(Lim(3)), ...
                                                     '-', num2str(Lim(4)), ', C=', num2str(Lim(5)*1e6), 'e-6 -', num2str(Lim(6)*1e6), ...
-                                                    'e-6, D=', num2str(Lim(7)), '-', num2str(Lim(8)), ', Coup1=', num2str(Lim(9)), '-', ...
-                                                    num2str(Lim(10)), ', Coup2=', num2str(Lim(11)), '-', num2str(Lim(12)), '.mat');
+                                                    'e-6, D=', num2str(Lim(7)), '-', num2str(Lim(8)));
 
 for EDFA=Vec_EDFA
     mkdir(strcat('./Workspaces/', num2str(EDFA*1e3), 'mw')); 

@@ -1,10 +1,10 @@
-function [] = print_pop(Pop)
+function [str] = print_pop(Pop)
+str = "";
     for c = 1:length(Pop(:))
         if(Pop(c)>0.001)
-            fprintf("%.6f   ", Pop(c));
+            str = str + "    " + Pop(c);
         else
-            fprintf("%e   ", Pop(c))
+            str = str + "    " + Pop(c);
         end
     end
-    fprintf("\n")
 end

@@ -1,4 +1,4 @@
-function [exp_norm, osa_simulado] = cascateado(varargin)  
+function [pks480, Pot_saida_dBm] = cascateado(varargin)  
 if      nargin==1
    EDFA = 0.28;
    Pin = 0.43e-3;
@@ -252,7 +252,7 @@ end
     %% Find peaks (envelope) in experimental data:
     Power= 10*log10((Power)/1e-3);      %Convert Power to dBm
     [pks480,locs480]                        = findpeaks(real(Power(405:end-200)),Lambda(405:end-200),'MinPeakDistance',(Lambda(2)-Lambda(1))*19);
-    
+
     L1 = 10.^(real(pks480-max(pks480))/10);
     aux = real(Pot_saida_dBm)-max(real(Pot_saida_dBm));
     aux = aux.';
@@ -285,8 +285,8 @@ end
         testando(i) = trapz(Lambda(x-15:x+15),Power(x-15:x+15));
     end
     
-    experimental = 10.^(pks480./10)*1e-3;            %Power em mW
-    simu = real(Pot_saida)*1e3;           %
+    experimental = 10.^(pks480./10);            %Power em mW
+    simu = real(Pot_saida)*1e3*10;           %
     exp_r = experimental(2:end);
     simu_r = simu(2:end);
     
@@ -308,6 +308,7 @@ end
         set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
         set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
         title(strcat('EDFA = ',num2str(EDFA*1e3),'mW       Pin = ', num2str(Pin*1e3), 'mW'));
+        subtitle(print_pop(ganho));
         tit(6) = "Comparison Experimental vs Analytical";
         
         fig(7) = figure('visible',ifplot);
@@ -323,6 +324,7 @@ end
         set(plt.YAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
         set(plt.XAxis(1),'FontName','Times New Roman','FontSize',16,'FontWeight','bold');
         title(strcat('EDFA = ',num2str(EDFA*1e3),'mW       Pin = ', num2str(Pin*1e3), 'mW'));
+        subtitle(print_pop(ganho));
         tit(7) = "Comparison Experimental vs Analytical(mW)";
     end
     if not(strcmp(savefig, ''))
